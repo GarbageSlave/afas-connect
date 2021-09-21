@@ -75,3 +75,8 @@ await AfasService.UpdateConnector.delete('FbItemArticle', 'FbItemArticle/FbItemA
 // Get metainfo
 const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
 ```
+
+### Planned
+- Merge all functions into one class. Which will be a breaking change I think
+- Change node-fetch to axios
+- Do more typing of variables
