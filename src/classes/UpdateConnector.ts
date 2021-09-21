@@ -47,9 +47,9 @@ export default class UpdateConnector extends Connector {
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example: "KnAppointment"
    * @param payload {string} valid AFAS JSON string
    */
-  public async insert(updateConnectorName: TUpdateConnectorName, payload: string) {
+  public async insert(updateConnectorName: TUpdateConnectorName, payload: object) {
     try {
-      return await this.http(this.connectorUrl + updateConnectorName, 'POST', payload);
+      return await this.http(this.connectorUrl + updateConnectorName, 'POST', JSON.stringify(payload));
     } catch (error) {
       throw error;
     }
@@ -60,9 +60,9 @@ export default class UpdateConnector extends Connector {
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
    * @param payload {string} valid AFAS JSON string
    */
-  public async update(updateConnectorName: TUpdateConnectorName, payload: string) {
+  public async update(updateConnectorName: TUpdateConnectorName, payload: object) {
     try {
-      return await this.http(this.connectorUrl + updateConnectorName, 'PUT', payload);
+      return await this.http(this.connectorUrl + updateConnectorName, 'PUT', JSON.stringify(payload));
     } catch (error) {
       throw error;
     }
@@ -106,12 +106,12 @@ export default class UpdateConnector extends Connector {
    * @param subUpdateConnectorName {string} sub UpdateConnector name, example "KnAppointmentLines"
    * @param payload {string} valid AFAS JSON string
    */
-  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: string) {
+  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object) {
     try {
       return await this.http(
         this.connectorUrl + updateConnectorName + '/' + subUpdateConnectorName + updateConnectorName,
         'POST',
-        payload,
+        JSON.stringify(payload),
       );
     } catch (error) {
       throw error;

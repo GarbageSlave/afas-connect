@@ -1,7 +1,7 @@
 {
-  "name": "connect-afas",
+  "name": "afas-connect",
   "version": "1.0.0",
-  "description": "Un-official Node package to connect to AFAS easily.",
+  "description": "An API that makes it easy to connect to Afas Profit services written in javascript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
