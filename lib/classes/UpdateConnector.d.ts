@@ -7,13 +7,13 @@ export default class UpdateConnector extends Connector {
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example: "KnAppointment"
      * @param payload {string} valid AFAS JSON string
      */
-    insert(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any>;
+    insert(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any>;
     /**
      * Updates record
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
      * @param payload {string} valid AFAS JSON string
      */
-    update(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any>;
+    update(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any>;
     /**
      * Deletes record
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
@@ -32,6 +32,6 @@ export default class UpdateConnector extends Connector {
      * @param subUpdateConnectorName {string} sub UpdateConnector name, example "KnAppointmentLines"
      * @param payload {string} valid AFAS JSON string
      */
-    insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: string): Promise<any>;
+    insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object): Promise<any>;
     metainfo(updateConnectorName: TUpdateConnectorName): Promise<any>;
 }

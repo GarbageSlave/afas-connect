@@ -30,6 +30,9 @@ Using the GetConnector
 // Getting data
 const response = await AfasService.GetConnector.get('Profit_Article')
 
+// -> expected response { skip: 0, take: 100, rows: [...ect] }
+console.log(response.rows)
+
 // Get metainfo
 const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
 ```
@@ -80,3 +83,4 @@ const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
 - Merge all functions into one class. Which will be a breaking change I think
 - Change node-fetch to axios
 - Do more typing of variables
+- Write better tests
