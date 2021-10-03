@@ -46,7 +46,7 @@ export default abstract class Connector {
     let config: RequestInit = {
       method,
       headers: {
-        Authorization: 'AfasToken ' + Buffer.from(this.apiKey, 'binary').toString('base64')
+        Authorization: 'AfasToken ' + Buffer.from(this.apiKey).toString('base64')
       }
     };
 

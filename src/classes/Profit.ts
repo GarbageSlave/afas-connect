@@ -6,33 +6,15 @@ import { IAfasConfig } from '../models';
 
 export class Profit {
   private AfasConfig: IAfasConfig;
+  public GetConnector: GetConnector;
+  public UpdateConnector: UpdateConnector;
+  public CustomConnector: CustomConnector;
 
   constructor(config: IAfasConfig) {
     this.AfasConfig = config;
-  }
-
-  /**
-   * Returns a GetConnector class object
-   * @return {GetConnector}
-   */
-  public get GetConnector() {
-    return new GetConnector(this.AfasConfig);
-  }
-
-  /**
-   * Returns a UpdateConnector class object
-   * @return {UpdateConnector}
-   */
-  public get UpdateConnector() {
-    return new UpdateConnector(this.AfasConfig);
-  }
-
-  /**
-   * Returns a CustomConnector class object
-   * @return {CustomConnector}
-   */
-  public get CustomConnector() {
-    return new CustomConnector(this.AfasConfig);
+    this.GetConnector = new GetConnector(config);
+    this.UpdateConnector = new UpdateConnector(config);
+    this.CustomConnector = new CustomConnector(config);
   }
 
   public changeConfig(config: IAfasConfig) {

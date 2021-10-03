@@ -1,4 +1,4 @@
-import { IAfasConnectorConfig, IFilterConfig, TFilter, TFilterOr } from '../models';
+import { IAfasConnectorConfig, IFilterConfig } from '../models';
 import Connector from './Connector';
 
 export default class GetConnector extends Connector {
@@ -6,7 +6,7 @@ export default class GetConnector extends Connector {
     super(AfasConfig);
   }
 
-  private parseConfig(config: IFilterConfig) {
+  private parseConfig(config: IFilterConfig): string {
     try {
       let result = '';
 
@@ -91,7 +91,7 @@ export default class GetConnector extends Connector {
     }
 
     return encodeURI(result);
-         
+
     } catch (error) {
       throw error;
     }
@@ -100,6 +100,8 @@ export default class GetConnector extends Connector {
   /**
    * Gets data from the GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
+   * 
+   * @returns { skip: number, take: number, rows: object[] }
    */
   public async get(getConnectorName: string, config?: IFilterConfig) {
     try {
