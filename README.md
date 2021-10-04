@@ -1,5 +1,5 @@
 ### What is AFAS Connect?
-An API that makes it easy to connect to Afas Profit REST services written in javascript.
+An API that makes it easy to connect to Afas Profit REST services written in TypeScript.
 
 ### Getting started / Installation
 
