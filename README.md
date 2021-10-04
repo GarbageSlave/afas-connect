@@ -21,7 +21,7 @@ const { Profit } = require('afas-connect');
 const AfasService = new Profit({
   apiKey: '<YOUR_API_KEY_HERE>',
   env: '12345',
-  envType: 'production',
+  envType: 'production'
 })
 ```
 
@@ -81,6 +81,7 @@ const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
 
 ### Planned
 - Merge all functions into one class. Which will be a breaking change I think
-- Change node-fetch to axios
+- Create SOAP method alternative
+- ~~Change node-fetch to axios~~
 - Do more typing of variables
 - Write better tests

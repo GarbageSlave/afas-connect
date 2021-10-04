@@ -21,6 +21,8 @@ export default class GetConnector extends Connector {
    * Gets a file from AFAS
    * @param fileId {string} ID of a file in AFAS
    * @param fileName {string} Filename of a file in AFAS
+   * 
+   * @returns 
    */
   public async file(fileId: string, fileName: string) {
     try {

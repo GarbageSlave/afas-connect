@@ -6,6 +6,8 @@ export default class GetConnector extends Connector {
     /**
      * Gets data from the GetConnector
      * @param getConnectorName {string} GetConnector name, example: Profit_Article
+     *
+     * @returns { skip: number, take: number, rows: object[] }
      */
     get(getConnectorName: string, config?: IFilterConfig): Promise<any>;
     metainfo(getConnectorName: string): Promise<any>;
