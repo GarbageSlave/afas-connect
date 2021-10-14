@@ -1,37 +1,41 @@
-import { IAfasConfig, IAfasConnectorConfig, THttpMethods } from '../models';
 import fetch, { RequestInit } from 'node-fetch';
-import constants from '../constants';
+import * as soap from 'soap'
+import { IAfasConnectorConfig, THttpMethods } from '../models';
+import { endpoints } from '../constants';
 
 export default abstract class Connector {
-  private _AfasConfig: IAfasConnectorConfig;
-
-  constructor(AfasConfig: IAfasConnectorConfig | IAfasConfig) {
-    this._AfasConfig = AfasConfig;
+  private AfasConfig: IAfasConnectorConfig;
+  constructor(AfasConfig: IAfasConnectorConfig) {
+    this.AfasConfig = AfasConfig;
   }
 
   // Should the env variable contain text, its trimmed and only the numbers are returned
   private get env() {
-    return this._AfasConfig.env.replace(/[^\d.]/g, '');
+    return this.AfasConfig.env.replace(/[^\d.]/g, '');
+  }
+
+  private get type() {
+    return this.AfasConfig.type ? this.AfasConfig.type : 'rest'
+  }
+
+  private get profitservice () {
+    return this.type === 'rest' ? 'ProfitRestServices' : 'ProfitServices'
   }
 
   private get apiKey() {
-    return this._AfasConfig.apiKey;
-  }
-
-  protected get connectorName() {
-    return this._AfasConfig.connector;
+    return this.AfasConfig.apiKey;
   }
 
   protected get afasUrl() {
-    return 'https://' + this.env + '.' + constants[this._AfasConfig.envType] + '/ProfitRestServices/';
+    return 'https://' + this.env + '.' + endpoints[this.type][this.AfasConfig.envType] + `/${this.profitservice}/`;
   }
 
   protected get connectorUrl() {
-    return 'https://' + this.env + '.' + constants[this._AfasConfig.envType] + '/ProfitRestServices/connectors/';
+    return 'https://' + this.env + '.' + endpoints[this.type][this.AfasConfig.envType] + `/${this.profitservice}/connectors/`;
   }
 
   protected get metainfoUrl() {
-    return 'https://' + this.env + '.' + constants[this._AfasConfig.envType] + '/ProfitRestServices/metainfo/';
+    return 'https://' + this.env + '.' + endpoints[this.type][this.AfasConfig.envType] + `/${this.profitservice}/metainfo/`;
   }
 
   /**
@@ -39,10 +43,10 @@ export default abstract class Connector {
    *
    * @param url {string} http://example.com
    * @param method {string} GET, POST, PUT, DELETE
-   * @param body {string} Optional, should be a valid JSON string
+   * @param body {string} Optional, should be a valid JSON object
    * @param customConfig {RequestInit} default http request config
    */
-  protected async http(url: string, method: THttpMethods, body?: string, customConfig?: RequestInit) {
+  protected async http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit) {
     let config: RequestInit = {
       method,
       headers: {
@@ -51,7 +55,7 @@ export default abstract class Connector {
     };
 
     if (body) {
-      config.body = body;
+      config.body = JSON.stringify(body);
     }
 
     if (customConfig) {
@@ -77,6 +81,24 @@ export default abstract class Connector {
           throw new Error('Internal server error');
         default:
           throw new Error(`Unknown error occured: ${response.statusText}`);
+      }
+    }
+  }
+
+  protected async executeSoap (url: string, args: object, methodname: string) {
+    try {
+      const client = await soap.createClientAsync(url)
+      return await new Promise((resolve, reject) => {
+        client[methodname]({...args, 'token': this.apiKey}, (err: any, result:any) => {
+          if (err) reject(err)
+          resolve(result)
+        })
+      })
+    } catch (error:any) {
+      if (error.body) {
+        throw new Error(error.body)
+      } else {
+        throw new Error(error)
       }
     }
   }

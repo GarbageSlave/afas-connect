@@ -23,11 +23,8 @@ export interface IAfasConfig {
     envType: TAfasConfigEnvType;
     apiKey: string;
 }
-export interface IAfasConnectorConfig {
-    env: string;
-    envType: TAfasConfigEnvType;
-    apiKey: string;
-    connector?: string;
+export interface IAfasConnectorConfig extends IAfasConfig {
+    type: 'rest' | 'soap';
 }
 export declare type TOrderBy = {
     order: 'ASC' | 'DESC';
@@ -50,8 +47,15 @@ export interface IFilterConfig {
     filter?: TFilter;
     jsonFilter?: object;
 }
-export interface IConstants {
-    [key: string]: string;
+export interface ISoapFilterConfig {
+    skip?: number;
+    take?: number;
+    filtersXml?: string;
+}
+export interface IEndpoints {
+    production: string;
+    test: string;
+    accept: string;
 }
 export declare type THttpMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface IAfasGetResponse {

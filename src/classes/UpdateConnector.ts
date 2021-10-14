@@ -1,9 +1,9 @@
-import { IAfasConnectorConfig, TUpdateConnectorName } from '../models/index';
+import { IAfasConfig, TUpdateConnectorName } from '../models/index';
 import Connector from './Connector';
 
 export default class UpdateConnector extends Connector {
-  constructor(AfasConfig: IAfasConnectorConfig) {
-    super(AfasConfig);
+  constructor(AfasConfig: IAfasConfig) {
+    super({...AfasConfig, type: 'rest'});
   }
 
   // private async createPath(connector: any, values: any) {
@@ -49,7 +49,7 @@ export default class UpdateConnector extends Connector {
    */
   public async insert(updateConnectorName: TUpdateConnectorName, payload: object) {
     try {
-      return await this.http(this.connectorUrl + updateConnectorName, 'POST', JSON.stringify(payload));
+      return await this.http(this.connectorUrl + updateConnectorName, 'POST', payload);
     } catch (error) {
       throw error;
     }
@@ -62,7 +62,7 @@ export default class UpdateConnector extends Connector {
    */
   public async update(updateConnectorName: TUpdateConnectorName, payload: object) {
     try {
-      return await this.http(this.connectorUrl + updateConnectorName, 'PUT', JSON.stringify(payload));
+      return await this.http(this.connectorUrl + updateConnectorName, 'PUT', payload);
     } catch (error) {
       throw error;
     }
@@ -111,7 +111,7 @@ export default class UpdateConnector extends Connector {
       return await this.http(
         this.connectorUrl + updateConnectorName + '/' + subUpdateConnectorName + updateConnectorName,
         'POST',
-        JSON.stringify(payload),
+        payload,
       );
     } catch (error) {
       throw error;

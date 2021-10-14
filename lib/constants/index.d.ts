@@ -1,3 +1,13 @@
-import { IConstants } from '../models';
-declare const constants: IConstants;
-export default constants;
+declare const endpoints: {
+    rest: {
+        production: string;
+        test: string;
+        accept: string;
+    };
+    soap: {
+        production: string;
+        test: string;
+        accept: string;
+    };
+};
+export { endpoints };

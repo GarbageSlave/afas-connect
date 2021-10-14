@@ -1,9 +1,9 @@
-import { IAfasConnectorConfig, IFilterConfig } from '../models';
+import { IAfasConfig, IFilterConfig } from '../models';
 import Connector from './Connector';
 
 export default class GetConnector extends Connector {
-  constructor(AfasConfig: IAfasConnectorConfig) {
-    super(AfasConfig);
+  constructor(AfasConfig: IAfasConfig) {
+    super({...AfasConfig, type: 'rest'});
   }
 
   private parseConfig(config: IFilterConfig): string {
