@@ -1,7 +1,7 @@
-import { IAfasConnectorConfig, TUpdateConnectorName } from '../models/index';
+import { IAfasConfig, TUpdateConnectorName } from '../models/index';
 import Connector from './Connector';
 export default class UpdateConnector extends Connector {
-    constructor(AfasConfig: IAfasConnectorConfig);
+    constructor(AfasConfig: IAfasConfig);
     /**
      * Inserts record
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example: "KnAppointment"

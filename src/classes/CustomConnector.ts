@@ -3,7 +3,7 @@ import Connector from './Connector';
 
 export default class GetConnector extends Connector {
   constructor(AfasConfig: IAfasConfig) {
-    super(AfasConfig);
+    super({...AfasConfig, type: 'soap'});
   }
 
   /**

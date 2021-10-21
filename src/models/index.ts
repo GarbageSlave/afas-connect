@@ -156,11 +156,8 @@ export interface IAfasConfig {
   apiKey: string;
 }
 
-export interface IAfasConnectorConfig {
-  env: string;
-  envType: TAfasConfigEnvType;
-  apiKey: string;
-  connector?: string;
+export interface IAfasConnectorConfig extends IAfasConfig {
+  type: 'rest' | 'soap';
 }
 
 export type TOrderBy = {
@@ -187,30 +184,17 @@ export interface IFilterConfig {
   filter?: TFilter,
   jsonFilter?: object
 }
-// export interface IGetConnectorConfig {
-//   skip?: number;
-//   take?: number;
-//   sortOnFields?: IGetConnectorConfigSortOnField;
-//   filters?: IGetconnectorConfigFilter[];
-//   jsonFilter?: object;
-// }
 
-// interface IGetConnectorConfigSortOnField {
-//   [key: string]: IConfigSortOnFieldObject;
-// }
+export interface ISoapFilterConfig {
+  skip?: number,
+  take?: number,
+  filtersXml?: string
+}
 
-// interface IGetconnectorConfigFilter {
-//   filterId: string;
-//   filterValue: string;
-//   operatorType: EOperatorTypes
-// }
-
-// interface IConfigSortOnFieldObject {
-//   type: 'ascending' | 'descending';
-// }
-
-export interface IConstants {
-  [key: string]: string;
+export interface IEndpoints {
+  production: string,
+  test: string,
+  accept: string
 }
 
 export type THttpMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';
