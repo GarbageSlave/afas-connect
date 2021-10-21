@@ -12,8 +12,6 @@ Yarn:
 $ yarn add afas-connect
 ```
 
-### Examples
-
 ##### Initializing
 ```js
 const { Profit } = require('afas-connect');
@@ -24,6 +22,7 @@ const AfasService = new Profit({
   envType: 'production'
 })
 ```
+### Examples
 
 #### REST
 
@@ -199,7 +198,7 @@ const XMLstring1 = `
 `
 await AfasService.SoapConnector.update('FbItemArticle', XMLstring1)
 
-// Updating a record
+// Update a record
 const XMLstring2 = `
 <FbItemArticle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Element>
@@ -211,7 +210,7 @@ const XMLstring2 = `
 `
 await AfasService.SoapConnector.update('FbItemArticle', XMLstring2)
 
-// Deleting a record
+// Delete a record
 const XMLstring3 = `
 <FbItemArticle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Element>
