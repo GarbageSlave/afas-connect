@@ -88,6 +88,7 @@ export default abstract class Connector {
   protected async httpSoap (url: string, args: object, methodname: string) {
     try {
       const client = await soap.createClientAsync(url)
+
       return await new Promise((resolve, reject) => {
         client[methodname]({...args, 'token': this.apiKey}, (err: any, result:any) => {
           if (err) reject(err)

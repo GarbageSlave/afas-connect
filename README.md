@@ -14,8 +14,6 @@ $ yarn add afas-connect
 
 ### Examples
 
-#### REST
-
 ##### Initializing
 ```js
 const { Profit } = require('afas-connect');
@@ -26,6 +24,8 @@ const AfasService = new Profit({
   envType: 'production'
 })
 ```
+
+#### REST
 
 ##### Using the GetConnector
 ```js
@@ -183,6 +183,45 @@ const response = await AfasService.SoapConnector.get('Profit_Article')
 // -> expected response { GetDataResult: "<XML DATA STRING />" }
 console.log(response.GetDataResult)
 
+```
+
+##### Updating, inserting and deleting data
+```js
+// Insert a record
+const XMLstring1 = `
+<FbItemArticle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Element>
+        <Fields Action="insert">
+          <ItCd>123</ItCd>
+        </Fields>
+    </Element>
+</FbItemArticle>
+`
+await AfasService.SoapConnector.update('FbItemArticle', XMLstring1)
+
+// Updating a record
+const XMLstring2 = `
+<FbItemArticle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Element>
+        <Fields Action="update">
+          <ItCd>123</ItCd>
+        </Fields>
+    </Element>
+</FbItemArticle>
+`
+await AfasService.SoapConnector.update('FbItemArticle', XMLstring2)
+
+// Deleting a record
+const XMLstring3 = `
+<FbItemArticle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Element>
+        <Fields Action="delete">
+          <ItCd>123</ItCd>
+        </Fields>
+    </Element>
+</FbItemArticle>
+`
+await AfasService.SoapConnector.update('FbItemArticle', XMLstring3)
 ```
 
 ### Planned
