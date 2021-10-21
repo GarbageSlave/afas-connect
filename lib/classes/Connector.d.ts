@@ -19,5 +19,5 @@ export default abstract class Connector {
      * @param customConfig {RequestInit} default http request config
      */
     protected http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any>;
-    protected executeSoap(url: string, args: object, methodname: string): Promise<unknown>;
+    protected httpSoap(url: string, args: object, methodname: string): Promise<unknown>;
 }

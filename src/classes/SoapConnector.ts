@@ -6,15 +6,18 @@ export default class SoapConnector extends Connector {
     super({...AfasConfig, type: 'soap'})
   }
 
-  public async get (getConnectorName: string, config: ISoapFilterConfig) {
+  /**
+   * 
+   * @param getConnectorName {string} example: Profit_Article
+   * @param config {ISoapFilterConfig} Filter config
+   */
+  public async get (getConnectorName: string, config?: ISoapFilterConfig) {
     var url = `${this.afasUrl}AppConnectorGet.asmx?WSDL`;
     var args = {
       'connectorId': getConnectorName,
-      'filtersXml': config.filtersXml,
-      'skip': config.skip,
-      'take': config.take
+      ...config
     };
-    const result = await this.executeSoap(url, args, 'GetData')
+    const result = await this.httpSoap(url, args, 'GetData')
     console.log(result)
   }
 }

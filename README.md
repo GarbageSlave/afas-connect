@@ -1,5 +1,5 @@
 ### What is AFAS Connect?
-An API that makes it easy to connect to Afas Profit REST services written in TypeScript.
+An API that makes it easy to connect to Afas Profit REST services written entirely in TypeScript.
 
 ### Getting started / Installation
 
@@ -14,7 +14,9 @@ $ yarn add afas-connect
 
 ### Examples
 
-Initializing
+#### REST
+
+##### Initializing
 ```js
 const { Profit } = require('afas-connect');
 
@@ -25,7 +27,7 @@ const AfasService = new Profit({
 })
 ```
 
-Using the GetConnector
+##### Using the GetConnector
 ```js
 // Getting data
 const response = await AfasService.GetConnector.get('Profit_Article')
@@ -33,11 +35,103 @@ const response = await AfasService.GetConnector.get('Profit_Article')
 // -> expected response { skip: 0, take: 100, rows: [...ect] }
 console.log(response.rows)
 
-// Get metainfo
+// Getting data using filter
+const config1 = {
+  skip: 0, 
+  take: 50, 
+  orderby: [
+    { 
+      fieldId: 'Itemcode', 
+      order: 'ASC' 
+    },
+    { 
+      fieldId: 'Date', 
+      order: 'DESC' 
+    }
+  ], 
+  filter: [
+    { 
+      filterfieldid: 'Itemcode', 
+      filtervalue: '12345AB',
+      operatortype: 1, 
+      or: [
+        { 
+          filtervalue: '6789CD', 
+          operatortype: 6 
+        }, 
+        { 
+          filtervalue: '0000', 
+          operatortype: 10
+        }
+      ] 
+    }
+  ]
+}
+const response1 = await AfasService.GetConnector.get('Profit_Article', config1)
+
+// Or, using the jsonFilter 
+const config2 = {
+  skip: 0, 
+  take: 50,
+  orderby: [{ fieldId: 'Itemcode', order: 'ASC' }, { fieldId: 'Date', order: 'DESC' }], 
+  jsonFilter: {
+    "Filters": {
+      "Filter": [
+        // Base
+        {
+          "@FilterId": "Filter 1",
+          "Field": [
+            {
+              "@FieldId": "Itemcode",
+              "@OperatorType": 1,
+              "#text": "12345AB"
+            },
+            {
+              "@FieldId": "Date",
+              "@OperatorType": 1,
+              "#text": "01-01-2021"
+            }
+          ]
+        },
+        // Or
+        {
+        "@FilterId": "Filter 2",
+          "Field": [
+            {
+              "@FieldId": "Itemcode",
+              "@OperatorType": 6,
+              "#text": "6789CD"
+            },
+            {
+              "@FieldId": "Date",
+              "@OperatorType": 1,
+              "#text": "02-02-2021"
+            }
+          ]
+        },
+        // Or
+        {
+          "@FilterId": "Filter 3",
+          "Field": [
+            {
+              "@FieldId": "Itemcode",
+              "@OperatorType": 10,
+              "#text": "0000"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+const response2 = await AfasService.GetConnector.get('Profit_Article', config2)
+
+// Get metainfo of Getconnector
 const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
+
 ```
 
-Using the UpdateConnector
+##### Using the UpdateConnector
 ```js
 // Inserts a record
 await AfasService.UpdateConnector.insert('FbItemArticle', {
@@ -79,9 +173,19 @@ await AfasService.UpdateConnector.delete('FbItemArticle', 'FbItemArticle/FbItemA
 const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
 ```
 
+#### SOAP
+
+##### Getting data
+
+```js
+const response = await AfasService.SoapConnector.get('Profit_Article')
+
+// -> expected response { GetDataResult: "<XML DATA STRING />" }
+console.log(response.GetDataResult)
+
+```
+
 ### Planned
-- Merge all functions into one class. Which will be a breaking change I think
-- Create SOAP method alternative
-- ~~Change node-fetch to axios~~
+- Create SOAP method alternative ✅
 - Do more typing of variables
 - Write better tests

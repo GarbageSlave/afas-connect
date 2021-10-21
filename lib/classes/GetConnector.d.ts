@@ -6,6 +6,7 @@ export default class GetConnector extends Connector {
     /**
      * Gets data from the GetConnector
      * @param getConnectorName {string} GetConnector name, example: Profit_Article
+     * @param config {IFilterConfig} Filter config
      *
      * @returns { skip: number, take: number, rows: object[] }
      */
