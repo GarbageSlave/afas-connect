@@ -16,6 +16,8 @@ export enum EOperatorTypes {
   QuickFilter = 15
 }
 
+export type TAfasRestResponse = { skip: number, take: number, rows: object[] }
+
 type TAfasConfigEnvType = 'production' | 'test' | 'accept';
 
 export type TUpdateConnectorName =

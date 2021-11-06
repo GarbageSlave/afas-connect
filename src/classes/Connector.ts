@@ -85,7 +85,14 @@ export default abstract class Connector {
     }
   }
 
-  protected async httpSoap (url: string, args: object, methodname: string) {
+  /**
+   * 
+   * @param url {string} WSDL url
+   * @param args {object} arguments
+   * @param methodname {string} client methodname
+   * @returns any
+   */
+  protected async execute (url: string, args: object, methodname: string) {
     try {
       const client = await soap.createClientAsync(url)
 

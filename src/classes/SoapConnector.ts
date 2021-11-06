@@ -7,7 +7,7 @@ export default class SoapConnector extends Connector {
   }
 
   /**
-   * 
+   * Get data from GetConnector
    * @param getConnectorName {string} example: Profit_Article
    * @param config {ISoapFilterConfig} Filter config
    * 
@@ -22,13 +22,15 @@ export default class SoapConnector extends Connector {
       'filtersXml': '',
       ...config
     };
-    return await this.httpSoap(url, args, 'GetData')
+    return await this.execute(url, args, 'GetData')
   }
 
   /**
    * 
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
-   * @param payload {string} A valid AFAS XML string 
+   * @param payload {string} A valid AFAS XML string
+   * 
+   * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
   public async update (updateConnectorName: TUpdateConnectorName, payload: string) {
     const url = `${this.afasUrl}appconnectorupdate.asmx?WSDL`;
@@ -37,6 +39,6 @@ export default class SoapConnector extends Connector {
       'connectorVersion': 1,
       'dataXml': payload
     };
-    await this.httpSoap(url, args, 'Execute')
+    await this.execute(url, args, 'Execute')
   }
 }

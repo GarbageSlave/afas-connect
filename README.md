@@ -172,6 +172,14 @@ await AfasService.UpdateConnector.delete('FbItemArticle', 'FbItemArticle/FbItemA
 const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
 ```
 
+##### Using the CustomConnector
+```js
+const response = await AfasService.CustomConnector.version()
+
+// -> expected response { version: "<YOUR AFAS VERSION>" }
+console.log(response.version)
+```
+
 #### SOAP
 
 ##### Getting data
@@ -225,5 +233,6 @@ await AfasService.SoapConnector.update('FbItemArticle', XMLstring3)
 
 ### Planned
 - Create SOAP method alternative ✅
+- Add CustomConnector to SOAP
 - Do more typing of variables
 - Write better tests

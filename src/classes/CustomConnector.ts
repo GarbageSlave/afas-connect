@@ -7,7 +7,8 @@ export default class GetConnector extends Connector {
   }
 
   /**
-   * @returns Profit version
+   * Get profit version
+   * @returns { version: string }
    */
   public async version() {
     try {
@@ -22,7 +23,6 @@ export default class GetConnector extends Connector {
    * @param fileId {string} ID of a file in AFAS
    * @param fileName {string} Filename of a file in AFAS
    * 
-   * @returns 
    */
   public async file(fileId: string, fileName: string) {
     try {
@@ -36,6 +36,7 @@ export default class GetConnector extends Connector {
    * Gets an image from AFAS
    * @param format 0: original, 1: thumbnail, 2: medium, sets image format
    * @param imageId {string} ID of image in AFAS
+   * 
    */
   public async image(format: 0 | 1 | 2, imageId: string) {
     try {
@@ -67,6 +68,7 @@ export default class GetConnector extends Connector {
    * @param additionalFilter {string} filters could be: /parsetid/paramid,paramid,../value,value,.. or
    *                                           ?filterfieldids=fieldid,fieldid&filtervalues=value,value&operatortypes=type,type or
    *                                           ?filterjson=json
+   * @returns { data: Base64String }
    */
   public async report(reportId: string, additionalFilter: string) {
     try {
