@@ -1,4 +1,4 @@
-import { IAfasConfig, TUpdateConnectorName } from '../models/index';
+import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index';
 import Connector from './Connector';
 
 export default class UpdateConnector extends Connector {
@@ -6,48 +6,14 @@ export default class UpdateConnector extends Connector {
     super({...AfasConfig, type: 'rest'});
   }
 
-  // private async createPath(connector: any, values: any) {
-  //   const connectorMetaInfo = await this.metainfo(connector);
-
-  //   return this.findId(values, connectorMetaInfo, '/' + connector);
-  // }
-
-  // private findId(values: { id: any; value: any }, currentNode: any, path?: any): string | boolean {
-  //   // find ID in fields, if not found, go to objects and try to find ID in fields ect.
-  //   let i;
-  //   let currentChild;
-  //   let result;
-
-  //   path = path + `/${currentNode.name}`;
-
-  //   if (currentNode.fields.findIndex((x: any) => x.fieldId === values.id) !== -1) {
-  //     path = path + `/${values.id}/${values.value}`;
-  //     return path;
-  //   } else {
-  //     // Use a for loop instead of forEach to avoid nested functions
-  //     // Otherwise "return" will not work properly
-  //     for (i = 0; i < currentNode.objects.length; i += 1) {
-  //       currentChild = currentNode.objects[i];
-
-  //       // Search in the current child
-  //       result = this.findId(values.id, currentChild, path);
-
-  //       // Return the result if the node has been found
-  //       if (result !== false) {
-  //         return result;
-  //       }
-  //     }
-  //     // The node has not been found and we have no more options
-  //     return false;
-  //   }
-  // }
-
   /**
-   * Inserts record
+   * Inserts a record
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example: "KnAppointment"
-   * @param payload {object} valid AFAS JSON string
+   * @param payload {object} valid AFAS JSON payload
+   * 
+   * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async insert(updateConnectorName: TUpdateConnectorName, payload: object) {
+  public async insert(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'POST', payload);
     } catch (error) {
@@ -56,11 +22,13 @@ export default class UpdateConnector extends Connector {
   }
 
   /**
-   * Updates record
+   * Updates a record
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
-   * @param payload {object} valid AFAS JSON string
+   * @param payload {object} valid AFAS JSON payload
+   * 
+   * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async update(updateConnectorName: TUpdateConnectorName, payload: object) {
+  public async update(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'PUT', payload);
     } catch (error) {
@@ -69,11 +37,13 @@ export default class UpdateConnector extends Connector {
   }
 
   /**
-   * Deletes record
+   * Deletes a record
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
-   * @param payload {object} URL param string, example: /KnAppointment/ApId/11.
+   * @param payload {string} URL param string, example: /KnAppointment/ApId/11.
+   * 
+   * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async delete(updateConnectorName: TUpdateConnectorName, payload: string) {
+  public async delete(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName + payload, 'DELETE');
     } catch (error) {
@@ -82,34 +52,17 @@ export default class UpdateConnector extends Connector {
   }
 
   /**
-   * Deletes record
-   * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
-   * @param id {string} example SbId
-   * @param idValue {string} example "24"
-   */
-  // public async delete_EXPERIMENTAL(updateConnectorName: TUpdateConnectorName, id: string, idValue: string) {
-  //   try {
-  //     const path = this.createPath(updateConnectorName, { id, value: idValue });
-  //     if (path) {
-  //       return await this.http(this.connectorUrl + updateConnectorName + path, 'DELETE');
-  //     } else {
-  //       throw new Error('Could not find path');
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-
-  /**
    * Inserts sub record, updates main record
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
    * @param subUpdateConnectorName {string} sub UpdateConnector name, example "KnAppointmentLines"
-   * @param payload {object} valid AFAS object
+   * @param payload {object} valid AFAS JSON payload
+   * 
+   * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object) {
+  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object): Promise<any> {
     try {
       return await this.http(
-        this.connectorUrl + updateConnectorName + '/' + subUpdateConnectorName + updateConnectorName,
+        this.connectorUrl + updateConnectorName + '/' + subUpdateConnectorName,
         'POST',
         payload,
       );
@@ -118,7 +71,13 @@ export default class UpdateConnector extends Connector {
     }
   }
 
-  public async metainfo(updateConnectorName: TUpdateConnectorName) {
+  /**
+   * Fetch the metadata of an UpdateConnector
+   * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
+   * 
+   * @returns { skip: number, take: number, rows: object[] }
+   */
+  public async metainfo(updateConnectorName: TUpdateConnectorName): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.metainfoUrl + 'update/' + updateConnectorName, 'GET');
     } catch (error) {

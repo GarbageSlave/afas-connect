@@ -1,7 +1,23 @@
 ### What is AFAS Connect?
-An API that makes it easy to connect to Afas Profit REST services written entirely in TypeScript.
 
-### Getting started / Installation
+An all-in-one API that makes it easy to connect to Afas Profit REST / SOAP services written entirely in TypeScript.
+
+### Table of Contents
+
+- [Installation](#Installation)
+- [Initializing](#Initializing)
+- [Examples](#Examples)
+  - [REST](#REST)
+    - [Using the GetConnector](#Using-the-GetConnector)
+    - [Using the UpdateConnector](#Using-the-UpdateConnector)
+    - [Using the CustomConnector](#Using-the-CustomConnector)
+    - [Using the InsiteConnector](#Using-the-InsiteConnector)
+  - [SOAP](#SOAP)
+    - [Getting data](#Getting-data)
+    - [Updating, inserting and deleting data](#Updating,-inserting-and-deleting-data)
+- [Planned](#Planned)
+
+### Installation
 
 To install using npm, simply:
 ```bash
@@ -13,11 +29,12 @@ $ yarn add afas-connect
 ```
 
 ##### Initializing
+
 ```js
 const { Profit } = require('afas-connect');
 
 const AfasService = new Profit({
-  apiKey: '<YOUR_API_KEY_HERE>',
+  token: '<YOUR_TOKEN_HERE>',
   env: '12345',
   envType: 'production'
 })
@@ -27,6 +44,7 @@ const AfasService = new Profit({
 #### REST
 
 ##### Using the GetConnector
+
 ```js
 // Getting data
 const response = await AfasService.GetConnector.get('Profit_Article')
@@ -131,6 +149,7 @@ const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
 ```
 
 ##### Using the UpdateConnector
+
 ```js
 // Inserts a record
 await AfasService.UpdateConnector.insert('FbItemArticle', {
@@ -172,6 +191,50 @@ await AfasService.UpdateConnector.delete('FbItemArticle', 'FbItemArticle/FbItemA
 const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
 ```
 
+##### Using the CustomConnector
+
+```js
+const response = await AfasService.CustomConnector.version()
+
+// -> expected response { version: "<YOUR AFAS VERSION>" }
+console.log(response.version)
+```
+
+#### Using the InsiteConnector
+
+```js
+const { Profit } = require('afas-connect');
+
+const AfasServiceNoToken = new Profit({
+  token: '',
+  env: '12345',
+  envType: 'production'
+})
+
+// Get users profile
+// Private key: You will find this in the In & Outsite tab in AFAS
+// Code: When a website is intergrated in Insite, a few params will be added to the URL. In the URL is a 'code' query param, use that one here
+const profile = await AfasServiceNoToken.InsiteConnector.profile("<INSITE PRIVATE KEY HERE>", "<INSITE 'CODE' URL QUERY PARAM HERE")
+
+// Request a user specific token
+
+// userId: could be something along the lines of 12345.Employee
+// Environment API Key: You will find this in the In & Outsite tab in AFAS
+// Environment Key: You will find this in the In & Outsite tab in AFAS
+const request = await AfasServiceNoToken.InsiteConnector.requestOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>")
+
+// request will be true if the OTP request did not fail
+if (request) {
+  // The user will recieve an email with a code
+
+  // otp: A code recieved in an email upon the request. If you already requested it recently, and did not recieve an email, you should use the most recent code 
+  const userToken = await AfasServiceNoToken.InsiteConnector.validateOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>", "<CODE RECIEVED IN EMAIL HERE>")
+
+  AfasServiceNoToken.changeConfig({token: userToken})
+}
+
+```
+
 #### SOAP
 
 ##### Getting data
@@ -185,6 +248,7 @@ console.log(response.GetDataResult)
 ```
 
 ##### Updating, inserting and deleting data
+
 ```js
 // Insert a record
 const XMLstring1 = `
@@ -224,6 +288,6 @@ await AfasService.SoapConnector.update('FbItemArticle', XMLstring3)
 ```
 
 ### Planned
-- Create SOAP method alternative ✅
-- Do more typing of variables
+
+- Add CustomConnector to SOAP
 - Write better tests

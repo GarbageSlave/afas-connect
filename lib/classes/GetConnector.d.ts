@@ -1,15 +1,17 @@
-import { IAfasConfig, IFilterConfig } from '../models';
+import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models';
 import Connector from './Connector';
 export default class GetConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     private parseConfig;
     /**
-     * Gets data from the GetConnector
+     * Get data from GetConnector
      * @param getConnectorName {string} GetConnector name, example: Profit_Article
      * @param config {IFilterConfig} Filter config
-     *
-     * @returns { skip: number, take: number, rows: object[] }
      */
-    get(getConnectorName: string, config?: IFilterConfig): Promise<any>;
-    metainfo(getConnectorName: string): Promise<any>;
+    get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse>;
+    /**
+     * Fetch the metadata of a GetConnector
+     * @param getConnectorName {string} GetConnector name, example: Profit_Article
+     */
+    metainfo(getConnectorName: string): Promise<TAfasRestDataResponse>;
 }
