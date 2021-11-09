@@ -1,15 +1,19 @@
 import { RequestInit } from 'node-fetch';
-import { IAfasConnectorConfig, THttpMethods } from '../models';
+import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models';
 export default abstract class Connector {
     private AfasConfig;
     constructor(AfasConfig: IAfasConnectorConfig);
     private get env();
     private get type();
     private get profitservice();
-    private get apiKey();
+    private get token();
     protected get afasUrl(): string;
     protected get connectorUrl(): string;
     protected get metainfoUrl(): string;
+    protected get insiteUrl(): string;
+    protected profileRequest(tokenUrl: string, data: any): Promise<TAfasRestProfileResponse | false>;
+    protected OTPRequest(userid: string, apiKey: string, apiToken: string): Promise<boolean>;
+    protected OTPValidate(userid: string, apiKey: string, apiToken: string, otp: string): Promise<string | false>;
     /**
      * HTTP function with AFAS authorization
      *
@@ -19,5 +23,12 @@ export default abstract class Connector {
      * @param customConfig {RequestInit} default http request config
      */
     protected http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any>;
-    protected httpSoap(url: string, args: object, methodname: string): Promise<unknown>;
+    /**
+     *
+     * @param url {string} WSDL url
+     * @param args {object} arguments
+     * @param methodname {string} client methodname
+     * @returns any
+     */
+    protected execute(url: string, args: object, methodname: string): Promise<any>;
 }

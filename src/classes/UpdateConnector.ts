@@ -1,4 +1,4 @@
-import { IAfasConfig, TUpdateConnectorName, TAfasRestResponse } from '../models/index';
+import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index';
 import Connector from './Connector';
 
 export default class UpdateConnector extends Connector {
@@ -13,7 +13,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async insert(updateConnectorName: TUpdateConnectorName, payload: object) {
+  public async insert(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'POST', payload);
     } catch (error) {
@@ -28,7 +28,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async update(updateConnectorName: TUpdateConnectorName, payload: object) {
+  public async update(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'PUT', payload);
     } catch (error) {
@@ -43,7 +43,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async delete(updateConnectorName: TUpdateConnectorName, payload: string) {
+  public async delete(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName + payload, 'DELETE');
     } catch (error) {
@@ -59,7 +59,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object) {
+  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object): Promise<any> {
     try {
       return await this.http(
         this.connectorUrl + updateConnectorName + '/' + subUpdateConnectorName,
@@ -77,7 +77,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns { skip: number, take: number, rows: object[] }
    */
-  public async metainfo(updateConnectorName: TUpdateConnectorName): Promise<TAfasRestResponse> {
+  public async metainfo(updateConnectorName: TUpdateConnectorName): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.metainfoUrl + 'update/' + updateConnectorName, 'GET');
     } catch (error) {

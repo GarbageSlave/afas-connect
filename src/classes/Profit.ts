@@ -2,6 +2,7 @@ import GetConnector from './GetConnector';
 import UpdateConnector from './UpdateConnector';
 import CustomConnector from './CustomConnector';
 import SoapConnector from './SoapConnector';
+import InsiteConnector from './InsiteConnector';
 
 import { IAfasConfig } from '../models';
 
@@ -11,6 +12,7 @@ export class Profit {
   public UpdateConnector: UpdateConnector;
   public CustomConnector: CustomConnector;
   public SoapConnector: SoapConnector;
+  public InsiteConnector: InsiteConnector;
 
   constructor(AfasConfig: IAfasConfig) {
     this.AfasConfig = AfasConfig;
@@ -18,6 +20,7 @@ export class Profit {
     this.UpdateConnector = new UpdateConnector(AfasConfig);
     this.CustomConnector = new CustomConnector(AfasConfig);
     this.SoapConnector = new SoapConnector(AfasConfig);
+    this.InsiteConnector = new InsiteConnector(AfasConfig);
   }
 
   public changeConfig(AfasConfig: IAfasConfig) {

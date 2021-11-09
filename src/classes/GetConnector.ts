@@ -1,4 +1,4 @@
-import { IAfasConfig, IFilterConfig, TAfasRestResponse } from '../models';
+import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models';
 import Connector from './Connector';
 
 export default class GetConnector extends Connector {
@@ -101,10 +101,8 @@ export default class GetConnector extends Connector {
    * Get data from GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
    * @param config {IFilterConfig} Filter config
-   * 
-   * @returns { skip: number, take: number, rows: object[] }
    */
-  public async get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestResponse> {
+  public async get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.connectorUrl + getConnectorName + this.parseConfig(config || {}), 'GET');
     } catch (error) {
@@ -115,10 +113,8 @@ export default class GetConnector extends Connector {
   /**
    * Fetch the metadata of a GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
-   * 
-   * @returns { skip: number, take: number, rows: object[] }
    */
-  public async metainfo(getConnectorName:string): Promise<TAfasRestResponse> {
+  public async metainfo(getConnectorName:string): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.metainfoUrl + 'get/' + getConnectorName, 'GET');
     } catch (error) {

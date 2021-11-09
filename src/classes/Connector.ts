@@ -1,6 +1,6 @@
 import fetch, { RequestInit } from 'node-fetch';
 import * as soap from 'soap'
-import { IAfasConnectorConfig, THttpMethods } from '../models';
+import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models';
 import { endpoints } from '../constants';
 
 export default abstract class Connector {
@@ -22,8 +22,8 @@ export default abstract class Connector {
     return this.type === 'rest' ? 'ProfitRestServices' : 'ProfitServices'
   }
 
-  private get apiKey() {
-    return this.AfasConfig.apiKey;
+  private get token() {
+    return this.AfasConfig.token;
   }
 
   protected get afasUrl() {
@@ -38,6 +38,62 @@ export default abstract class Connector {
     return 'https://' + this.env + '.' + endpoints[this.type][this.AfasConfig.envType] + `/${this.profitservice}/metainfo/`;
   }
 
+  protected get insiteUrl() {
+    return 'https://' + this.env + '.afasinsite.nl'
+  }
+
+  protected async profileRequest (tokenUrl: string, data: any): Promise<TAfasRestProfileResponse | false> {
+    const response = await fetch(tokenUrl, {
+      method: "POST",
+      body: data,
+      headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+    if (response.ok) {
+      return await response.json()
+    } else {
+      return false
+    }
+  }
+
+  protected async OTPRequest (userid: string, apiKey: string, apiToken: string): Promise<boolean> {
+    const url = this.afasUrl + 'otprequest'
+    const data = {
+      userid,
+      apiKey,
+      apiToken
+    }
+
+    const response = await fetch(url, { method: "POST", body: JSON.stringify(data) })
+
+    if (response.ok) {
+      // Reponse is 201 even if the apiKey and apiToken do not match
+      return true
+    } else {
+      return false
+    }
+  }
+
+  protected async OTPValidate (userid: string, apiKey: string, apiToken: string, otp: string): Promise<string | false> {
+    const url = this.afasUrl + 'otpvalidation'
+    const data = {
+      userid,
+      apiKey,
+      apiToken,
+      otp
+    };
+
+    const response = await fetch(url, { method: "POST", body: JSON.stringify(data) })
+
+    if (response.ok) {
+      const body = await response.json()
+      return body.token
+    } else {
+      return false
+    }
+  }
+
   /**
    * HTTP function with AFAS authorization
    *
@@ -50,7 +106,7 @@ export default abstract class Connector {
     let config: RequestInit = {
       method,
       headers: {
-        Authorization: 'AfasToken ' + Buffer.from(this.apiKey).toString('base64')
+        Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64')
       }
     };
 
@@ -92,12 +148,12 @@ export default abstract class Connector {
    * @param methodname {string} client methodname
    * @returns any
    */
-  protected async execute (url: string, args: object, methodname: string) {
+  protected async execute (url: string, args: object, methodname: string): Promise<any> {
     try {
       const client = await soap.createClientAsync(url)
 
       return await new Promise((resolve, reject) => {
-        client[methodname]({...args, 'token': this.apiKey}, (err: any, result:any) => {
+        client[methodname]({...args, 'token': this.token}, (err: any, result:any) => {
           if (err) reject(err)
           resolve(result)
         })
