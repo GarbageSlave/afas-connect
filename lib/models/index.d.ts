@@ -1,20 +1,4 @@
-export declare enum EOperatorTypes {
-    EqualTo = 1,
-    GreaterOrEqualTo = 2,
-    LessOrEqualTo = 3,
-    GreaterThan = 4,
-    LessThan = 5,
-    ContainsText = 6,
-    NotEqualTo = 7,
-    Empty = 8,
-    NotEmpty = 9,
-    StartsWith = 10,
-    DoesNotContainText = 11,
-    DoesNotStartWith = 12,
-    EndsWith = 13,
-    DoesNotEndWith = 14,
-    QuickFilter = 15
-}
+declare type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 export declare type TAfasRestDataResponse = {
     skip: number;
     take: number;
@@ -48,12 +32,12 @@ export declare type TOrderBy = {
 }[];
 export declare type TFilterOr = {
     filtervalue: string;
-    operatortype: EOperatorTypes;
+    operatortype: TOperatorTypes;
 }[];
 export declare type TFilter = {
     filterfieldid: string;
     filtervalue: string;
-    operatortype: EOperatorTypes;
+    operatortype: TOperatorTypes;
     or?: TFilterOr;
 }[];
 export interface IFilterConfig {
