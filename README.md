@@ -34,7 +34,7 @@ $ yarn add afas-connect
 const { Profit } = require('afas-connect');
 
 const AfasService = new Profit({
-  token: '<YOUR_API_KEY_HERE>',
+  token: '<YOUR_TOKEN_HERE>',
   env: '12345',
   envType: 'production'
 })
