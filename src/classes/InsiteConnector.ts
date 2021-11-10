@@ -17,12 +17,13 @@ export default class InsiteConnector extends Connector {
   /**
    * Get profile of active user
    * 
+   * @param tokenUrl {string} The 'tokenUrl' param in URL of an intergration website in Insite
    * @param privateKey {string} Insite private key
-   * @param code {string} The 'code' param in URL of an externaly loaded website in Insite
+   * @param code {string} The 'code' param in URL of an intergration website in Insite
    * @returns {(TAfasRestProfileResponse | false)} Data of currently active AFAS user or false if profile was already fetched once
    */
-  public async profile ( privateKey: string, code: string): Promise<TAfasRestProfileResponse | false> {
-    return await this.profileRequest(this.insiteUrl + '/integrationtoken', this.formUrlEncoded({secret: privateKey, code}))
+  public async profile (privateKey: string, code: string, tokenUrl?: string): Promise<TAfasRestProfileResponse | false> {
+    return await this.profileRequest(tokenUrl || this.insiteUrl + '/integrationtoken', this.formUrlEncoded({secret: privateKey, code}))
   }
 
   /**
