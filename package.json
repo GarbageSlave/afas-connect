@@ -1,6 +1,6 @@
 {
   "name": "afas-connect",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "An API that makes it easy to connect to Afas Profit REST services written entirely in TypeScript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -121,11 +121,11 @@ export default abstract class Connector {
     const response = await fetch(url, config);
 
     if (response.ok) {
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-        return response.json();
-      } else {
-        return response.text();
+      const rawBody = await response.text();
+      try {
+        return JSON.parse(rawBody)
+      } catch (error) {
+        return rawBody
       }
     } else {
       switch (response.status) {
