@@ -7,11 +7,12 @@ export default class InsiteConnector extends Connector {
     /**
      * Get profile of active user
      *
+     * @param tokenUrl {string} The 'tokenUrl' param in URL of an intergration website in Insite
      * @param privateKey {string} Insite private key
-     * @param code {string} The 'code' param in URL of an externaly loaded website in Insite
+     * @param code {string} The 'code' param in URL of an intergration website in Insite
      * @returns {(TAfasRestProfileResponse | false)} Data of currently active AFAS user or false if profile was already fetched once
      */
-    profile(privateKey: string, code: string): Promise<TAfasRestProfileResponse | false>;
+    profile(privateKey: string, code: string, tokenUrl?: string): Promise<TAfasRestProfileResponse | false>;
     /**
      * Request user specific token
      * An email will be send to the user with a code

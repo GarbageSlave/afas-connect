@@ -25,6 +25,11 @@ export class Profit {
 
   public changeConfig(AfasConfig: IAfasConfig) {
     this.AfasConfig = {...this.AfasConfig, ...AfasConfig};
+    this.GetConnector = new GetConnector(this.AfasConfig);
+    this.UpdateConnector = new UpdateConnector(this.AfasConfig);
+    this.CustomConnector = new CustomConnector(this.AfasConfig);
+    this.SoapConnector = new SoapConnector(this.AfasConfig);
+    this.InsiteConnector = new InsiteConnector(this.AfasConfig);
   }
 
   public get config() {
