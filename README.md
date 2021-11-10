@@ -205,23 +205,24 @@ console.log(response.version)
 ```js
 const { Profit } = require('afas-connect');
 
-const AfasServiceNoToken = new Profit({
+const AfasServiceNoTokenNoEnv = new Profit({
   token: '',
-  env: '12345',
+  env: '',
   envType: 'production'
 })
 
 // Get users profile
 // Private key: You will find this in the In & Outsite tab in AFAS
 // Code: When a website is intergrated in Insite, a few params will be added to the URL. In the URL is a 'code' query param, use that one here
-const profile = await AfasServiceNoToken.InsiteConnector.profile("<INSITE PRIVATE KEY HERE>", "<INSITE 'CODE' URL QUERY PARAM HERE")
+// (optional) tokenUrl: use the 'tokenUrl' url query param here. SHOULD BE USED IF 'env' IS NOT FILLED IN 
+const profile = await AfasServiceNoTokenNoEnv.InsiteConnector.profile("<INSITE PRIVATE KEY HERE>", "<INSITE 'CODE' URL QUERY PARAM HERE", "<EXAMPLE: https://12345.afasinsite.nl/intergrationtoken>")
 
 // Request a user specific token
 
 // userId: could be something along the lines of 12345.Employee
 // Environment API Key: You will find this in the In & Outsite tab in AFAS
 // Environment Key: You will find this in the In & Outsite tab in AFAS
-const request = await AfasServiceNoToken.InsiteConnector.requestOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>")
+const request = await AfasServiceNoTokenNoEnv.InsiteConnector.requestOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>")
 
 // request will be true if the OTP request did not fail
 if (request) {
