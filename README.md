@@ -6,15 +6,17 @@ An all-in-one API that makes it easy to connect to Afas Profit REST / SOAP servi
 
 - [Installation](#Installation)
 - [Initializing](#Initializing)
-- [Examples](#Examples)
-  - [REST](#REST)
-    - [Using the GetConnector](#Using-the-GetConnector)
-    - [Using the UpdateConnector](#Using-the-UpdateConnector)
-    - [Using the CustomConnector](#Using-the-CustomConnector)
-    - [Using the InsiteConnector](#Using-the-InsiteConnector)
+- [Profit API](#Profit-API)
+  - [JSON](#JSON)
+    - [GetConnector](#GetConnector)
+      - [GetConnector Config Schema](#GetConnector-Config-Schema)
+      - [Advanced examples GetConnector](#Advanced-examples-GetConnector)
+    - [UpdateConnector](#UpdateConnector)
+    - [CustomConnector](#CustomConnector)
+    - [InsiteConnector](#InsiteConnector)
+      - [Advanced examples InsiteConnector](#Advanced-examples-InsiteConnector)
   - [SOAP](#SOAP)
-    - [Getting data](#Getting-data)
-    - [Updating, inserting and deleting data](#Updating,-inserting-and-deleting-data)
+    - [SoapConnector](#SoapConnector)
 - [Planned](#Planned)
 
 ### Installation
@@ -99,7 +101,7 @@ const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
 }
 ```
 
-###### Advanced examples
+###### Advanced examples GetConnector
 Here we will make use of full config when getting from a GetConnector
 ```js
 // Getting data using filter
@@ -305,7 +307,7 @@ const request = await AfasService.InsiteConnector.requestOTP(profile.userId, "<E
 const userToken = await AfasServiceNoTokenNoEnv.InsiteConnector.validateOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>", "<CODE RECIEVED IN EMAIL HERE>")
 // -> expected response '<YOUR USER TOKEN>'
 ```
-###### Advanced examples
+###### Advanced examples InsiteConnector
 Using the InsiteConnector in a website intergrated in Insite.
 Here we create an instance without knowing the environment and token.
 ```js
