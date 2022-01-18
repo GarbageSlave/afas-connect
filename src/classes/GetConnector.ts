@@ -101,10 +101,28 @@ export default class GetConnector extends Connector {
    * Get data from GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
    * @param config {IFilterConfig} Filter config
+   * 
+   * @returns Example: { skip: 0, take: 100, rows: [your data] }
    */
   public async get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.connectorUrl + getConnectorName + this.parseConfig(config || {}), 'GET');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+    /**
+   * Get just one row from GetConnector
+   * @param getConnectorName {string} GetConnector name, example: Profit_Article
+   * @param config {IFilterConfig} Filter config
+   * 
+   * @returns the first entry as an Object. If nothing was found returns Null
+   */
+  public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse> {
+    try {
+      const response = await this.http(this.connectorUrl + getConnectorName + this.parseConfig({...config, skip: 0, take: 1} || {}), 'GET');
+      return response.rows[0] || null
     } catch (error) {
       throw error;
     }

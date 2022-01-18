@@ -1,6 +1,6 @@
 import { Profit } from '../index';
 const x = new Profit({
-  apiKey: '',
+  token: '',
   env: '',
   envType: 'production',
 });
