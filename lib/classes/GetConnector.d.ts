@@ -7,8 +7,18 @@ export default class GetConnector extends Connector {
      * Get data from GetConnector
      * @param getConnectorName {string} GetConnector name, example: Profit_Article
      * @param config {IFilterConfig} Filter config
+     *
+     * @returns Example: { skip: 0, take: 100, rows: [your data] }
      */
     get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse>;
+    /**
+   * Get just one row from GetConnector
+   * @param getConnectorName {string} GetConnector name, example: Profit_Article
+   * @param config {IFilterConfig} Filter config
+   *
+   * @returns the first entry as an Object. If nothing was found returns Null
+   */
+    getOne(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse>;
     /**
      * Fetch the metadata of a GetConnector
      * @param getConnectorName {string} GetConnector name, example: Profit_Article

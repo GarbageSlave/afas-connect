@@ -1,6 +1,6 @@
 import { IAfasConfig } from '../models';
 import Connector from './Connector';
-export default class GetConnector extends Connector {
+export default class CustomConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     /**
      * Gets current profit version

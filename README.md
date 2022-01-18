@@ -32,6 +32,7 @@ $ yarn add afas-connect
 
 ### Initializing
 
+#### v2.x
 ```js
 const { Profit } = require('afas-connect');
 
@@ -41,6 +42,17 @@ const AfasService = new Profit({
   envType: 'production'
 })
 ```
+#### v1.x
+```js
+const { Profit } = require('afas-connect');
+
+const AfasService = new Profit({
+  apiKey: '<YOUR_TOKEN_HERE>',
+  env: '12345',
+  envType: 'production'
+})
+```
+
 ### Profit API
 
 #### JSON

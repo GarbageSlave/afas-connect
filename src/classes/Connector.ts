@@ -103,41 +103,36 @@ export default abstract class Connector {
    * @param customConfig {RequestInit} default http request config
    */
   protected async http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit) {
-    let config: RequestInit = {
-      method,
-      headers: {
-        Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64')
+    try {
+      let config: RequestInit = {
+        method,
+        headers: {
+          Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64')
+        }
+      };
+  
+      if (body) {
+        config.body = JSON.stringify(body);
       }
-    };
-
-    if (body) {
-      config.body = JSON.stringify(body);
-    }
-
-    if (customConfig) {
-      config = { ...config, ...customConfig };
-    }
-
-    const response = await fetch(url, config);
-
-    if (response.ok) {
+  
+      if (customConfig) {
+        config = { ...config, ...customConfig };
+      }
+  
+      const response = await fetch(url, config);
       const rawBody = await response.text();
-      try {
-        return JSON.parse(rawBody)
-      } catch (error) {
-        return rawBody
+  
+      if (response.ok) {
+        try {
+          return JSON.parse(rawBody)
+        } catch (error) {
+          return rawBody
+        }
+      } else {
+        throw rawBody
       }
-    } else {
-      switch (response.status) {
-        case 401:
-          throw new Error('Invalid AFAS credentials');
-        case 404:
-          throw new Error('Connector does not exist');
-        case 500:
-          throw new Error('Internal server error');
-        default:
-          throw new Error(`Unknown error occured: ${response.statusText}`);
-      }
+    } catch (error: any) {
+      throw JSON.parse(error)
     }
   }
 
