@@ -112,7 +112,7 @@ export default class GetConnector extends Connector {
     }
   }
 
-    /**
+  /**
    * Get just one row from GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
    * @param config {IFilterConfig} Filter config
