@@ -129,10 +129,14 @@ export default abstract class Connector {
           return rawBody
         }
       } else {
-        throw rawBody
+        try {
+          throw JSON.parse(rawBody)
+        } catch (error) {
+          throw error
+        }
       }
     } catch (error: any) {
-      throw JSON.parse(error)
+      throw error
     }
   }
 
