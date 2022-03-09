@@ -1,4 +1,5 @@
 import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models';
+import { ProfitError } from './ProfitError';
 import Connector from './Connector';
 
 export default class GetConnector extends Connector {
@@ -107,8 +108,8 @@ export default class GetConnector extends Connector {
   public async get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.connectorUrl + getConnectorName + this.parseConfig(config || {}), 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw new ProfitError('An error occured trying to Get ' + getConnectorName, error);
     }
   }
 
@@ -123,8 +124,8 @@ export default class GetConnector extends Connector {
     try {
       const response = await this.http(this.connectorUrl + getConnectorName + this.parseConfig({...config, skip: 0, take: 1} || {}), 'GET');
       return response.rows[0] || null
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw new ProfitError('An error occured trying to Get one of ' + getConnectorName, error);
     }
   }
 
@@ -135,8 +136,8 @@ export default class GetConnector extends Connector {
   public async metainfo(getConnectorName:string): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.metainfoUrl + 'get/' + getConnectorName, 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw new ProfitError('An error occured trying to get Metainfo of ' + getConnectorName, error);
     }
   }
 }

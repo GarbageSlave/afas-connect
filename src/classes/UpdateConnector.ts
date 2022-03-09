@@ -1,5 +1,6 @@
 import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index';
 import Connector from './Connector';
+import { ProfitError } from './ProfitError';
 
 export default class UpdateConnector extends Connector {
   constructor(AfasConfig: IAfasConfig) {
@@ -16,8 +17,8 @@ export default class UpdateConnector extends Connector {
   public async insert(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'POST', payload);
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to insert ' + updateConnectorName, error);
     }
   }
 
@@ -31,8 +32,8 @@ export default class UpdateConnector extends Connector {
   public async update(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'PUT', payload);
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to update ' + updateConnectorName, error);
     }
   }
 
@@ -46,8 +47,8 @@ export default class UpdateConnector extends Connector {
   public async delete(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName + payload, 'DELETE');
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to delete ' + updateConnectorName, error);
     }
   }
 
@@ -66,8 +67,8 @@ export default class UpdateConnector extends Connector {
         'POST',
         payload,
       );
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to insert and update ' + updateConnectorName, error);
     }
   }
 
@@ -80,8 +81,8 @@ export default class UpdateConnector extends Connector {
   public async metainfo(updateConnectorName: TUpdateConnectorName): Promise<TAfasRestDataResponse> {
     try {
       return await this.http(this.metainfoUrl + 'update/' + updateConnectorName, 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to get Metainfo of ' + updateConnectorName, error);
     }
   }
 }

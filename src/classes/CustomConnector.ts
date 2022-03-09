@@ -1,5 +1,6 @@
 import { IAfasConfig } from '../models';
 import Connector from './Connector';
+import { ProfitError } from './ProfitError';
 
 export default class CustomConnector extends Connector {
   constructor(AfasConfig: IAfasConfig) {
@@ -12,8 +13,8 @@ export default class CustomConnector extends Connector {
   public async version(): Promise<{version: string}> {
     try {
       return await this.http(this.afasUrl + 'profitversion', 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to get the AFAS version', error);
     }
   }
 
@@ -26,8 +27,8 @@ export default class CustomConnector extends Connector {
   public async file(fileId: string, fileName: string): Promise<any> {
     try {
       return await this.http(this.afasUrl + 'fileconnector/' + encodeURI(fileId) + '/' + encodeURI(fileName), 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to get a file', error);
     }
   }
 
@@ -40,8 +41,8 @@ export default class CustomConnector extends Connector {
   public async image(format: 0 | 1 | 2, imageId: string): Promise<any> {
     try {
       return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying get an image', error);
     }
   }
 
@@ -56,8 +57,8 @@ export default class CustomConnector extends Connector {
         this.afasUrl + 'subjectconnector/' + encodeURI(subjectId) + '/' + encodeURI(fileId),
         'GET',
       );
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to get a subject', error);
     }
   }
 
@@ -69,8 +70,8 @@ export default class CustomConnector extends Connector {
   public async report(reportId: string, additionalFilter: string): Promise<{data: string}> {
     try {
       return await this.http(this.afasUrl + 'reportconnector/' + encodeURI(reportId) + additionalFilter, 'GET');
-    } catch (error) {
-      throw error;
+    } catch (error:any) {
+      throw new ProfitError('An error occured trying to get a report', error);
     }
   }
 }
