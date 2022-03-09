@@ -102,8 +102,8 @@ export default abstract class Connector {
    * @param body {string} Optional, should be a valid JSON object
    * @param customConfig {RequestInit} default http request config
    */
-  protected async http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit) {
-    try {
+  protected async http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any> {
+    return new Promise (async (resolve, reject) => {
       let config: RequestInit = {
         method,
         headers: {
@@ -119,25 +119,19 @@ export default abstract class Connector {
         config = { ...config, ...customConfig };
       }
   
-      const response = await fetch(url, config);
+      const response = await fetch(url, config)
       const rawBody = await response.text();
   
       if (response.ok) {
         try {
-          return JSON.parse(rawBody)
+          resolve(JSON.parse(rawBody))
         } catch (error) {
-          return rawBody
+          resolve(rawBody)
         }
       } else {
-        try {
-          throw JSON.parse(rawBody)
-        } catch (error) {
-          throw error
-        }
+        reject({ body: rawBody, response })
       }
-    } catch (error: any) {
-      throw error
-    }
+    })
   }
 
   /**
@@ -148,21 +142,15 @@ export default abstract class Connector {
    * @returns any
    */
   protected async execute (url: string, args: object, methodname: string): Promise<any> {
-    try {
-      const client = await soap.createClientAsync(url)
-
-      return await new Promise((resolve, reject) => {
-        client[methodname]({...args, 'token': this.token}, (err: any, result:any) => {
-          if (err) reject(err)
-          resolve(result)
+    return await new Promise(async (resolve, reject) => {
+      soap.createClientAsync(url)
+        .then(client => {
+          client[methodname]({...args, 'token': this.token}, (err: any, result:any) => {
+            if (err) reject(err)
+            resolve(result)
+          })
         })
-      })
-    } catch (error:any) {
-      if (error.body) {
-        throw new Error(error.body)
-      } else {
-        throw new Error(error)
-      }
-    }
+        .catch(reject)
+    })
   }
 }

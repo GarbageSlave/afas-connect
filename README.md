@@ -114,7 +114,7 @@ const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
 ```
 
 ###### Advanced examples GetConnector
-Here we will make use of full config when getting from a GetConnector
+Here we will make full use of the config when getting from a GetConnector
 ```js
 // Getting data using filter
 const config1 = {
