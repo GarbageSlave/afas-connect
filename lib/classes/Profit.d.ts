@@ -5,7 +5,7 @@ import SoapConnector from './SoapConnector';
 import InsiteConnector from './InsiteConnector';
 import { IAfasConfig } from '../models';
 export declare class Profit {
-    private AfasConfig;
+    private _AfasConfig;
     GetConnector: GetConnector;
     UpdateConnector: UpdateConnector;
     CustomConnector: CustomConnector;
@@ -13,6 +13,7 @@ export declare class Profit {
     InsiteConnector: InsiteConnector;
     constructor(AfasConfig: IAfasConfig);
     changeConfig(AfasConfig: IAfasConfig): void;
+    metainfo(): Promise<import("../models").TAfasRestDataResponse>;
     get config(): {
         environment: string;
         environmentType: "production" | "test" | "accept";

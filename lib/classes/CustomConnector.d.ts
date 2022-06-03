@@ -19,9 +19,10 @@ export default class CustomConnector extends Connector {
      * Gets an image from AFAS
      * @param format 0: original, 1: thumbnail, 2: medium, sets image format
      * @param imageId {string} ID of image in AFAS
+     * @param inBinary {bool} If true, will return the file in binary instead of { filedata, mimetype }
      *
      */
-    image(format: 0 | 1 | 2, imageId: string): Promise<any>;
+    image(format: 0 | 1 | 2, imageId: string, inBinary?: boolean): Promise<any>;
     /**
      * Gets a subject from AFAS
      * @param subjectId {string} ID of subject in AFAS

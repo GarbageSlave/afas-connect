@@ -36,11 +36,12 @@ export default class CustomConnector extends Connector {
    * Gets an image from AFAS
    * @param format 0: original, 1: thumbnail, 2: medium, sets image format
    * @param imageId {string} ID of image in AFAS
+   * @param inBinary {bool} If true, will return the file in binary instead of { filedata, mimetype }
    * 
    */
-  public async image(format: 0 | 1 | 2, imageId: string): Promise<any> {
+  public async image(format: 0 | 1 | 2, imageId: string, inBinary = false): Promise<any> {
     try {
-      return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET');
+      return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET', undefined, { headers: { SendFileAsBinary : inBinary ? "1" : "0" }});
     } catch (error:any) {
       throw new ProfitError('An error occured trying get an image', error);
     }

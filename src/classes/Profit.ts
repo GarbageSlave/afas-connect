@@ -7,7 +7,7 @@ import InsiteConnector from './InsiteConnector';
 import { IAfasConfig } from '../models';
 
 export class Profit {
-  private AfasConfig: IAfasConfig;
+  private _AfasConfig: IAfasConfig;
   public GetConnector: GetConnector;
   public UpdateConnector: UpdateConnector;
   public CustomConnector: CustomConnector;
@@ -15,7 +15,7 @@ export class Profit {
   public InsiteConnector: InsiteConnector;
 
   constructor(AfasConfig: IAfasConfig) {
-    this.AfasConfig = AfasConfig;
+    this._AfasConfig = AfasConfig;
     this.GetConnector = new GetConnector(AfasConfig);
     this.UpdateConnector = new UpdateConnector(AfasConfig);
     this.CustomConnector = new CustomConnector(AfasConfig);
@@ -24,15 +24,23 @@ export class Profit {
   }
 
   public changeConfig(AfasConfig: IAfasConfig) {
-    this.AfasConfig = {...this.AfasConfig, ...AfasConfig};
-    this.GetConnector = new GetConnector(this.AfasConfig);
-    this.UpdateConnector = new UpdateConnector(this.AfasConfig);
-    this.CustomConnector = new CustomConnector(this.AfasConfig);
-    this.SoapConnector = new SoapConnector(this.AfasConfig);
-    this.InsiteConnector = new InsiteConnector(this.AfasConfig);
+    this._AfasConfig = {...this._AfasConfig, ...AfasConfig};
+    this.GetConnector = new GetConnector(this._AfasConfig);
+    this.UpdateConnector = new UpdateConnector(this._AfasConfig);
+    this.CustomConnector = new CustomConnector(this._AfasConfig);
+    this.SoapConnector = new SoapConnector(this._AfasConfig);
+    this.InsiteConnector = new InsiteConnector(this._AfasConfig);
+  }
+
+  public async metainfo() {
+    try {
+      return await this.GetConnector.metainfo();
+    } catch (error) {
+      throw error;      
+    }
   }
 
   public get config() {
-    return { environment: this.AfasConfig.env, environmentType: this.AfasConfig.envType };
+    return { environment: this._AfasConfig.env, environmentType: this._AfasConfig.envType };
   }
 }
