@@ -68,11 +68,12 @@ const ProfitService = new Profit({
 })
 ```
 
-### Profit API
+## Profit API
 
-#### JSON
+### JSON
 
 **Models**
+
 From /lib/models you can import some enums which make some options more verbose. 
 They are for convience, so you can still just use 1 instead of OperatorTypes.EqualTo if you want to.
 ```js
@@ -80,7 +81,7 @@ They are for convience, so you can still just use 1 instead of OperatorTypes.Equ
 const { OrderBy, OperatorTypes, Languages, EnvTypes } = require('afas-connect/lib/models');
 ```
 
-##### Profit
+#### Profit
 
 **get Profit.config**
 ```js
@@ -104,7 +105,7 @@ const metainfo = await ProfitService.metainfo()
 ProfitService.changeConfig({ env: "67890" })
 ```
 
-##### GetConnector
+#### GetConnector
 
 **GetConnector.get(getconnectorname[, config])**
 ```js
@@ -122,7 +123,7 @@ const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
 // -> expected response { rows: [...] }
 // If left empty, example .metainfo(''), gives a list of all connectors, use Profit.metainfo() then instead
 ```
-###### GetConnector Config Schema
+##### GetConnector Config Schema
 ```js
 const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
 {
@@ -162,7 +163,7 @@ const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
 }
 ```
 
-###### Advanced examples GetConnector
+##### Advanced examples GetConnector
 Here we will make full use of the config when getting from a GetConnector
 ```js
 const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
@@ -259,7 +260,7 @@ const config2 = {
 const response2 = await ProfitService.GetConnector.get('Profit_Article', config2)
 ```
 
-##### UpdateConnector
+#### UpdateConnector
 
 **UpdateConnector.insert(updateconnectorname, body)**
 ```js
@@ -316,7 +317,7 @@ const metainfo = await ProfitService.UpdateConnector.metainfo('FbItemArticle')
 // -> expected response { rows: [...] }
 ```
 
-##### DataConnector
+#### DataConnector
 
 **DataConnector.version()**
 ```js
@@ -350,7 +351,7 @@ const response = await ProfitService.DataConnector.subject(123, 456)
 const response = await ProfitService.DataConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1')
 ```
 
-##### InsiteConnector
+#### InsiteConnector
 
 **InsiteConnector.profile(insitePrivateKey, insiteCodeParam[, intergrationtokenurl])**
 ```js
@@ -370,7 +371,7 @@ const request = await ProfitService.InsiteConnector.requestOTP(profile.userId, "
 const userToken = await AfasServiceNoTokenNoEnv.InsiteConnector.validateOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>", "<CODE RECIEVED IN EMAIL HERE>")
 // -> expected response '<YOUR USER TOKEN>'
 ```
-###### Advanced examples InsiteConnector
+##### Advanced examples InsiteConnector
 Using the InsiteConnector in a website intergrated in Insite.
 Here we create an instance without knowing the environment and token.
 ```js
@@ -405,9 +406,9 @@ if (request) {
   AfasServiceNoTokenNoEnv.changeConfig({ token: userToken })
 }
 ```
-#### SOAP
+### SOAP
 
-##### SoapConnector
+#### SoapConnector
 
 **SoapConnector.get(getconnectorname)**
 ```js
