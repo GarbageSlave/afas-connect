@@ -1,4 +1,4 @@
-import { IAfasConfig } from '../models';
+import { IAfasConfig, TImageSizes, ImageSizes } from '../models';
 import Connector from './Connector';
 export default class DataConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
@@ -23,7 +23,7 @@ export default class DataConnector extends Connector {
      * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
      *
      */
-    image(format: 0 | 1 | 2, imageId: string, binary?: boolean): Promise<any>;
+    image(format: TImageSizes | ImageSizes, imageId: string, binary?: boolean): Promise<any>;
     /**
      * Gets a subject from AFAS
      * @param subjectId {string} ID of subject in AFAS

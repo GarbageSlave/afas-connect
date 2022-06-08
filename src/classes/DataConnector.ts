@@ -1,4 +1,4 @@
-import { IAfasConfig } from '../models';
+import { IAfasConfig, TImageSizes, ImageSizes } from '../models';
 import Connector from './Connector';
 import { ProfitError } from './ProfitError';
 
@@ -40,7 +40,7 @@ export default class DataConnector extends Connector {
    * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    * 
    */
-  public async image(format: 0 | 1 | 2, imageId: string, binary: boolean = false): Promise<any> {
+  public async image(format: TImageSizes | ImageSizes, imageId: string, binary: boolean = false): Promise<any> {
     try {
       return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {

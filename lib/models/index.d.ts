@@ -31,6 +31,12 @@ export declare enum OrderBy {
     Ascending = "ASC",
     Descending = "DESC"
 }
+export declare enum ImageSizes {
+    Original = 0,
+    Medium = 2,
+    Thumbnail = 1
+}
+export declare type TImageSizes = 0 | 1 | 2;
 declare type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 export declare type TAfasRestDataResponse = {
     skip: number;

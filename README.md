@@ -78,7 +78,7 @@ From /lib/models you can import some enums which make some options more verbose.
 They are for convience, so you can still just use 1 instead of OperatorTypes.EqualTo if you want to.
 ```js
 // All enums
-const { OrderBy, OperatorTypes, Languages, EnvTypes } = require('afas-connect/lib/models');
+const { OrderBy, OperatorTypes, Languages, EnvTypes, ImageSizes } = require('afas-connect/lib/models');
 ```
 
 #### Profit
@@ -327,16 +327,18 @@ const response = await ProfitService.DataConnector.version()
 // -> expected response { version: "<YOUR AFAS VERSION>" }
 ```
 
-**DataConnector.file(fileId, fileName)**
+**DataConnector.file(fileId, fileName[, binary])**
 ```js
 // Get file from AFAS
-const response = await ProfitService.DataConnector.file(123, 'report')
+const response = await ProfitService.DataConnector.file(123, 'report', false)
 ```
 
-**DataConnector.image(format, imageId[, inBinary])**
+**DataConnector.image(format, imageId[, binary])**
 ```js
+const { ImageSizes } = require('afas-connect/lib/models');
+
 // Get image from AFAS
-const response = await ProfitService.DataConnector.image(0, 'image' [, false])
+const response = await ProfitService.DataConnector.image(0 or ImageSizes.Original, 'image' [, false])
 ```
 
 **DataConnector.subject(subjectId, fileId)**
@@ -345,10 +347,10 @@ const response = await ProfitService.DataConnector.image(0, 'image' [, false])
 const response = await ProfitService.DataConnector.subject(123, 456)
 ```
 
-**DataConnector.report(reportId, additionalFilter)**
+**DataConnector.report(reportId, additionalFilter[, binary])**
 ```js
 // Get image from AFAS
-const response = await ProfitService.DataConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1')
+const response = await ProfitService.DataConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1', false)
 ```
 
 #### InsiteConnector

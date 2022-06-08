@@ -36,6 +36,14 @@ export enum OrderBy {
   Descending = "DESC"
 }
 
+export enum ImageSizes {
+  Original = 0,
+  Medium = 2,
+  Thumbnail = 1
+}
+
+export type TImageSizes =  0 | 1 | 2
+
 type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
 
 export type TAfasRestDataResponse = { 
