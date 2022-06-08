@@ -1,20 +1,40 @@
-// enum TOperatorTypes {
-//   EqualTo = 1,
-//   GreaterOrEqualTo = 2,
-//   LessOrEqualTo = 3,
-//   GreaterThan = 4,
-//   LessThan = 5,
-//   ContainsText = 6,
-//   NotEqualTo = 7,
-//   Empty = 8,
-//   NotEmpty = 9,
-//   StartsWith = 10,
-//   DoesNotContainText = 11,
-//   DoesNotStartWith = 12,
-//   EndsWith = 13,
-//   DoesNotEndWith = 14,
-//   QuickFilter = 15
-// }
+export enum OperatorTypes {
+  EqualTo = 1,
+  GreaterOrEqualTo = 2,
+  LesserOrEqualTo = 3,
+  GreaterThan = 4,
+  LesserThan = 5,
+  ContainsText = 6,
+  NotEqualTo = 7,
+  Empty = 8,
+  NotEmpty = 9,
+  StartsWith = 10,
+  DoesNotContainText = 11,
+  DoesNotStartWith = 12,
+  EndsWith = 13,
+  DoesNotEndWith = 14,
+  QuickFilter = 15
+}
+
+export enum Languages {
+  Dutch = 'nl-nl',
+  Flemish = 'nl-be',
+  French = 'fr-fr',
+  German = 'de-de',
+  // English = 'en-us',
+  English = 'en-en'
+}
+
+export enum EnvTypes {
+  Production = "production",
+  Test = "test",
+  Accept = "accept"
+}
+
+export enum OrderBy {
+  Ascending = "ASC",
+  Descending = "DESC"
+}
 
 type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
 
@@ -168,33 +188,47 @@ export type TUpdateConnectorName =
   | 'PtConProjectForecast'
   | 'PtMeasurement';
 
-export type TCustomConnectorName = '';
+type TLanguages =
+  | 'nl-nl' 
+  | 'nl-be' 
+  | 'fr-fr' 
+  | 'de-de' 
+  | 'en-en';
 
 export interface IAfasConfig {
   env: string;
-  envType: TAfasConfigEnvType;
+  envType: TAfasConfigEnvType | EnvTypes;
   token: string;
+  language?: TLanguages | Languages;
 }
 
 export interface IAfasConnectorConfig extends IAfasConfig {
   type: 'rest' | 'soap';
 }
 
+type TOrderByTypes = 'ASC' | 'DESC'
+
 export type TOrderBy = {
-  order: 'ASC' | 'DESC'
+  order: TOrderByTypes | OrderBy
   fieldId: string
 }[]
 
 export type TFilterOr = {
   filtervalue: string,
-  operatortype: TOperatorTypes,
+  operatortype: TOperatorTypes | OperatorTypes,
+}[]
+
+export type TFilterAnd = {
+  filtervalue: string,
+  operatortype: TOperatorTypes | OperatorTypes,
 }[]
 
 export type TFilter = {
   filterfieldid: string,
   filtervalue: string,
-  operatortype: TOperatorTypes,
-  or?: TFilterOr
+  operatortype: TOperatorTypes | OperatorTypes,
+  and?: TFilterAnd
+  or?: TFilterOr,
 }[]
 
 export interface IFilterConfig { 

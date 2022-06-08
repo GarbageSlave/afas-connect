@@ -2,7 +2,6 @@ import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models';
 import Connector from './Connector';
 export default class GetConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
-    private parseConfigWIP;
     private parseConfig;
     /**
      * Get data from GetConnector

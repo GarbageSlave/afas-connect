@@ -13,7 +13,7 @@ An all-in-one API that makes it easy to connect to Afas Profit REST / SOAP servi
       - [GetConnector Config Schema](#GetConnector-Config-Schema)
       - [Advanced examples GetConnector](#Advanced-examples-GetConnector)
     - [UpdateConnector](#UpdateConnector)
-    - [CustomConnector](#CustomConnector)
+    - [DataConnector](#DataConnector)
     - [InsiteConnector](#InsiteConnector)
       - [Advanced examples InsiteConnector](#Advanced-examples-InsiteConnector)
   - [SOAP](#SOAP)
@@ -32,6 +32,19 @@ $ yarn add afas-connect
 ```
 
 ### Initializing
+
+#### v3.x
+```js
+const { Profit } = require('afas-connect');
+
+const ProfitService = new Profit({
+  token: '<YOUR_TOKEN_HERE>',
+  env: '12345',
+  envType: 'production',
+  // Optional
+  language: Languages.Dutch // or 'nl-nl' for example
+})
+```
 
 #### v2.x
 ```js
@@ -112,7 +125,7 @@ const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
   orderby: [
     { 
       fieldId: string, 
-      order: 'ASC' or 'DESC' 
+      order: 'ASC', 'DESC' or OrderBy.* // Example: OrderBy.Ascending, which is basically 'ASC' but more verbose
     },
     {
       ...
@@ -123,11 +136,11 @@ const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
     {
       filterfieldid: string, 
       filtervalue: string,
-      operatortype: number, 
+      operatortype: number or OperatorType.*, // example: OperatorType.EqualTo, which is basically 1 but more verbose
       or: [
         { 
           filtervalue: string, 
-          operatortype: number 
+          operatortype: number or OperatorType.*
         }, 
         { 
           ...
@@ -290,38 +303,38 @@ const metainfo = await ProfitService.UpdateConnector.metainfo('FbItemArticle')
 // -> expected response { rows: [...] }
 ```
 
-##### CustomConnector
+##### DataConnector
 
-**CustomConnector.version()**
+**DataConnector.version()**
 ```js
 // Get AFAS version
-const response = await ProfitService.CustomConnector.version()
+const response = await ProfitService.DataConnector.version()
 
 // -> expected response { version: "<YOUR AFAS VERSION>" }
 ```
 
-**CustomConnector.file(fileId, fileName)**
+**DataConnector.file(fileId, fileName)**
 ```js
 // Get file from AFAS
-const response = await ProfitService.CustomConnector.file(123, 'report')
+const response = await ProfitService.DataConnector.file(123, 'report')
 ```
 
-**CustomConnector.image(format, imageId[, inBinary])**
+**DataConnector.image(format, imageId[, inBinary])**
 ```js
 // Get image from AFAS
-const response = await ProfitService.CustomConnector.image(0, 'image' [, false])
+const response = await ProfitService.DataConnector.image(0, 'image' [, false])
 ```
 
-**CustomConnector.subject(subjectId, fileId)**
+**DataConnector.subject(subjectId, fileId)**
 ```js
 // Get image from AFAS
-const response = await ProfitService.CustomConnector.subject(123, 456)
+const response = await ProfitService.DataConnector.subject(123, 456)
 ```
 
-**CustomConnector.report(reportId, additionalFilter)**
+**DataConnector.report(reportId, additionalFilter)**
 ```js
 // Get image from AFAS
-const response = await ProfitService.CustomConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1')
+const response = await ProfitService.DataConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1')
 ```
 
 ##### InsiteConnector
@@ -433,5 +446,6 @@ await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3)
 
 ### Planned
 
-- Add CustomConnector to SOAP
-- Write better tests
+I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
+
+From time to time I will probably update this package as things either change or I discover something new. For now, thank you for using this package! :) 
