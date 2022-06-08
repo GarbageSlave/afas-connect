@@ -36,13 +36,14 @@ $ yarn add afas-connect
 #### v3.x
 ```js
 const { Profit } = require('afas-connect');
+const { Languages, EnvTypes } = require('afas-connect/lib/models');
 
 const ProfitService = new Profit({
   token: '<YOUR_TOKEN_HERE>',
   env: '12345',
-  envType: 'production',
+  envType: EnvTypes.Production, // or 'production' like in v2.x
   // Optional
-  language: Languages.Dutch // or 'nl-nl' for example
+  language: Languages.Dutch // or 'nl-nl'
 })
 ```
 
@@ -70,6 +71,14 @@ const ProfitService = new Profit({
 ### Profit API
 
 #### JSON
+
+**Models**
+From /lib/models you can import some enums which make some options more verbose. 
+They are for convience, so you can still just use 1 instead of OperatorTypes.EqualTo if you want to.
+```js
+// All enums
+const { OrderBy, OperatorTypes, Languages, EnvTypes } = require('afas-connect/lib/models');
+```
 
 ##### Profit
 
@@ -107,13 +116,15 @@ const response = await ProfitService.GetConnector.get('Profit_Article' [, config
 
 **GetConnector.metainfo(getconnectorname)**
 ```js
-// Getting connectorname metainfo
+// Getting the metainfo of a getconnector
 const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
 
 // -> expected response { rows: [...] }
+// If left empty, example .metainfo(''), gives a list of all connectors, use Profit.metainfo() then instead
 ```
 ###### GetConnector Config Schema
 ```js
+const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
 {
   // `skip` indicates how much records AFAS should skip
   skip: number
@@ -154,6 +165,8 @@ const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
 ###### Advanced examples GetConnector
 Here we will make full use of the config when getting from a GetConnector
 ```js
+const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
+
 // Getting data using filter
 const config1 = {
   skip: 0, 
@@ -161,26 +174,26 @@ const config1 = {
   orderby: [
     { 
       fieldId: 'Itemcode', 
-      order: 'ASC' 
+      order: OrderBy.Ascending 
     },
     { 
       fieldId: 'Date', 
-      order: 'DESC' 
+      order: OrderBy.Descending
     }
   ], 
   filter: [
     { 
       filterfieldid: 'Itemcode', 
       filtervalue: '12345AB',
-      operatortype: 1, 
+      operatortype: OperatorTypes.EqualTo, 
       or: [
         { 
           filtervalue: '6789CD', 
-          operatortype: 6 
+          operatortype: OperatorTypes.ContainsText
         }, 
         { 
           filtervalue: '0000', 
-          operatortype: 10
+          operatortype: OperatorTypes.StartsWith
         }
       ] 
     }
@@ -446,6 +459,8 @@ await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3)
 
 ### Planned
 
-I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
+- DataConnector File upload 
+
+Furthermore I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
 
 From time to time I will probably update this package as things either change or I discover something new. For now, thank you for using this package! :) 
