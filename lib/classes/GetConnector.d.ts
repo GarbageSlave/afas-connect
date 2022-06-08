@@ -21,7 +21,8 @@ export default class GetConnector extends Connector {
     getOne(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse>;
     /**
      * Fetch the metadata of a GetConnector
+     * If getConnectorName is left empty, gives the list of all connectors, use Profit.metainfo() then instead
      * @param getConnectorName {string} GetConnector name, example: Profit_Article
      */
-    metainfo(getConnectorName: string): Promise<TAfasRestDataResponse>;
+    metainfo(getConnectorName?: string): Promise<TAfasRestDataResponse>;
 }

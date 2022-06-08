@@ -1,10 +1,11 @@
 import fetch, { RequestInit } from 'node-fetch';
 import * as soap from 'soap'
-import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models';
+import { IAfasConnectorConfig, Languages, TAfasRestProfileResponse, THttpMethods } from '../models';
 import { endpoints } from '../constants';
 
 export default abstract class Connector {
   private AfasConfig: IAfasConnectorConfig;
+
   constructor(AfasConfig: IAfasConnectorConfig) {
     this.AfasConfig = AfasConfig;
   }
@@ -24,6 +25,10 @@ export default abstract class Connector {
 
   private get token() {
     return this.AfasConfig.token;
+  }
+
+  private get language() {
+    return this.AfasConfig.language ? this.AfasConfig.language : Languages.Dutch;
   }
 
   protected get afasUrl() {
@@ -107,10 +112,11 @@ export default abstract class Connector {
       let config: RequestInit = {
         method,
         headers: {
-          Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64')
+          Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
+          'Accept-Language': this.language
         }
       };
-  
+
       if (body) {
         config.body = JSON.stringify(body);
       }

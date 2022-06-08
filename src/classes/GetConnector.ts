@@ -9,39 +9,32 @@ export default class GetConnector extends Connector {
 
   private parseConfig(config: IFilterConfig): string {
     try {
-      let result = '';
+      const result: any = {};
 
       // check if there are keys in the config
       if (Object.keys(config || {}).length) {
         // If there are, initiate the string with a ? to start adding queries
-        result = '?';
 
         // set skip query
         if (config.skip) {
-          result += 'skip=' + config.skip + '&';
+          result.skip = config.skip
         }
         // set take query
         if (config.take) {
-          result += 'take=' + config.take + '&';
+          result.take = config.take
         }
 
         // Sort on field query
 
         if (config.orderby?.length) {
-          let sortResult = 'orderbyfieldids=';
-
           for (const el of config.orderby) {
             if (el.order === 'DESC'){
-              sortResult += '-' + el.fieldId + '&'
+              result.orderbyfieldids = '-' + el.fieldId
             } else {
-              sortResult += el.fieldId + '&'
+              result.orderbyfieldids = el.fieldId
             }
           }
-
-          result = result + sortResult;
         }
-
-        // filter query
 
         if (config.filter?.length) {
           let filterfieldidsResult = ''
@@ -49,19 +42,20 @@ export default class GetConnector extends Connector {
           let operatortypesResult = ''
 
           const orDepth:{id: string, filtervalue: string, operatortype: number}[][] = [];
-          for (const [i, filter] of config.filter.entries()) {
-            const comma = (i < config.filter.length - 1) ? ',' : ''
 
-            filterfieldidsResult += filter.filterfieldid + comma
-            filtervaluesResult += filter.filtervalue + comma
-            operatortypesResult += filter.operatortype + comma
+          for (const [i, filter] of config.filter.entries()) {
+            const divider = (i < config.filter.length - 1) ? ',' : ''
+
+            filterfieldidsResult += filter.filterfieldid + divider
+            filtervaluesResult += filter.filtervalue + divider
+            operatortypesResult += filter.operatortype + divider
 
             if (filter.or?.length) {
-              for (const [iJ, orFilter] of filter.or.entries()) {
-                if (!(orDepth[iJ] instanceof Array)) {
-                  orDepth[iJ] = []
+              for (const [j, orFilter] of filter.or.entries()) {
+                if (!(orDepth[j] instanceof Array)) {
+                  orDepth[j] = []
                 }
-                orDepth[iJ].push({...orFilter, id: filter.filterfieldid})
+                orDepth[j].push({...orFilter, id: filter.filterfieldid})
               }
             }
           }
@@ -72,27 +66,31 @@ export default class GetConnector extends Connector {
               filterfieldidsResult += ';'
               filtervaluesResult += ';'
               operatortypesResult += ';'
-              for (let iJ = 0; iJ < or.length; iJ++) {
-                const filter = or[iJ];
-                const comma = (iJ < or.length - 1) ? ',' : ''
-                filterfieldidsResult += filter.id + comma
-                filtervaluesResult += filter.filtervalue + comma
-                operatortypesResult += filter.operatortype + comma
+              for (let i = 0; i < or.length; i++) {
+                const filter = or[i];
+                const divider = (i < or.length - 1) ? ',' : ''
+                filterfieldidsResult += filter.id + divider
+                filtervaluesResult += filter.filtervalue + divider
+                operatortypesResult += filter.operatortype + divider
               }
             }
           }
-          result += `filterfieldids=${filterfieldidsResult}&filtervalues=${filtervaluesResult}&operatortypes=${operatortypesResult}`
+
+          result.filterfieldids = filterfieldidsResult
+          result.filtervalues = filtervaluesResult
+          result.operatortypes = operatortypesResult
         }
 
       // JSONfilter query
       // check if the property exists
       if (Object.keys(config.jsonFilter || {}).length) {
-        result = result + 'filterjson=' + encodeURI(JSON.stringify(config.jsonFilter));
+        result.filterjson = encodeURI(JSON.stringify(config.jsonFilter))
       }
     }
 
-    return encodeURI(result);
-
+    // map query
+    const query = Object.keys(result).map(k => `${k}=${result[k]}`).join('&');
+    return encodeURI('?' + query);
     } catch (error) {
       throw error;
     }
@@ -131,11 +129,16 @@ export default class GetConnector extends Connector {
 
   /**
    * Fetch the metadata of a GetConnector
+   * If getConnectorName is left empty, gives the list of all connectors, use Profit.metainfo() then instead
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
    */
-  public async metainfo(getConnectorName:string): Promise<TAfasRestDataResponse> {
+  public async metainfo(getConnectorName?:string): Promise<TAfasRestDataResponse> {
     try {
-      return await this.http(this.metainfoUrl + 'get/' + getConnectorName, 'GET');
+      if (getConnectorName) {
+        return await this.http(this.metainfoUrl + 'get/' + getConnectorName, 'GET');
+      } else {
+        return await this.http(this.afasUrl + 'metainfo', 'GET');
+      }
     } catch (error: any) {
       throw new ProfitError('An error occured trying to get Metainfo of ' + getConnectorName, error);
     }

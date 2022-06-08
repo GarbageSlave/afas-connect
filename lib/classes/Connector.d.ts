@@ -7,6 +7,7 @@ export default abstract class Connector {
     private get type();
     private get profitservice();
     private get token();
+    private get language();
     protected get afasUrl(): string;
     protected get connectorUrl(): string;
     protected get metainfoUrl(): string;

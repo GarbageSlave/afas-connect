@@ -8,11 +8,12 @@ An all-in-one API that makes it easy to connect to Afas Profit REST / SOAP servi
 - [Initializing](#Initializing)
 - [Profit API](#Profit-API)
   - [JSON](#JSON)
+    - [Profit](#Profit)
     - [GetConnector](#GetConnector)
       - [GetConnector Config Schema](#GetConnector-Config-Schema)
       - [Advanced examples GetConnector](#Advanced-examples-GetConnector)
     - [UpdateConnector](#UpdateConnector)
-    - [CustomConnector](#CustomConnector)
+    - [DataConnector](#DataConnector)
     - [InsiteConnector](#InsiteConnector)
       - [Advanced examples InsiteConnector](#Advanced-examples-InsiteConnector)
   - [SOAP](#SOAP)
@@ -32,11 +33,25 @@ $ yarn add afas-connect
 
 ### Initializing
 
+#### v3.x
+```js
+const { Profit } = require('afas-connect');
+const { Languages, EnvTypes } = require('afas-connect/lib/models');
+
+const ProfitService = new Profit({
+  token: '<YOUR_TOKEN_HERE>',
+  env: '12345',
+  envType: EnvTypes.Production, // or 'production' like in v2.x
+  // Optional
+  language: Languages.Dutch // or 'nl-nl'
+})
+```
+
 #### v2.x
 ```js
 const { Profit } = require('afas-connect');
 
-const AfasService = new Profit({
+const ProfitService = new Profit({
   token: '<YOUR_TOKEN_HERE>',
   env: '12345',
   envType: 'production'
@@ -46,36 +61,71 @@ const AfasService = new Profit({
 ```js
 const { Profit } = require('afas-connect');
 
-const AfasService = new Profit({
+const ProfitService = new Profit({
   apiKey: '<YOUR_TOKEN_HERE>',
   env: '12345',
   envType: 'production'
 })
 ```
 
-### Profit API
+## Profit API
 
-#### JSON
+### JSON
 
-##### GetConnector
+**Models**
+
+From /lib/models you can import some enums which make some options more verbose. 
+They are for convience, so you can still just use 1 instead of OperatorTypes.EqualTo if you want to.
+```js
+// All enums
+const { OrderBy, OperatorTypes, Languages, EnvTypes, ImageSizes } = require('afas-connect/lib/models');
+```
+
+#### Profit
+
+**get Profit.config**
+```js
+// Get the current config
+const currentconfig = ProfitService.config
+
+// -> expected response { environment, environmentType }
+```
+
+**Profit.metainfo()**
+```js
+// Get environment metainfo
+const metainfo = await ProfitService.metainfo()
+
+// -> expected response { updateConnectors: [ { id, description } ], getConnectors: [ { id, description } ], info: { envid, appName, group, tokenExpiry } }
+```
+
+**Profit.changeConfig(AfasConfig)**
+```js
+// Change the current AfasConfig
+ProfitService.changeConfig({ env: "67890" })
+```
+
+#### GetConnector
 
 **GetConnector.get(getconnectorname[, config])**
 ```js
 // Getting data
-const response = await AfasService.GetConnector.get('Profit_Article')
+const response = await ProfitService.GetConnector.get('Profit_Article' [, config])
 
 // -> expected response { skip: 0, take: 100, rows: [...] }
 ```
 
 **GetConnector.metainfo(getconnectorname)**
 ```js
-// Getting connectorname metainfo
-const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
+// Getting the metainfo of a getconnector
+const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
 
 // -> expected response { rows: [...] }
+// If left empty, example .metainfo(''), gives a list of all connectors, use Profit.metainfo() then instead
 ```
-###### GetConnector Config Schema
+##### GetConnector Config Schema
 ```js
+const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
 {
   // `skip` indicates how much records AFAS should skip
   skip: number
@@ -87,7 +137,7 @@ const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
   orderby: [
     { 
       fieldId: string, 
-      order: 'ASC' or 'DESC' 
+      order: 'ASC', 'DESC' or OrderBy.* // Example: OrderBy.Ascending, which is basically 'ASC' but more verbose
     },
     {
       ...
@@ -98,11 +148,11 @@ const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
     {
       filterfieldid: string, 
       filtervalue: string,
-      operatortype: number, 
+      operatortype: number or OperatorType.*, // example: OperatorType.EqualTo, which is basically 1 but more verbose
       or: [
         { 
           filtervalue: string, 
-          operatortype: number 
+          operatortype: number or OperatorType.*
         }, 
         { 
           ...
@@ -113,9 +163,11 @@ const metainfo = await AfasService.GetConnector.metainfo('Profit_Article')
 }
 ```
 
-###### Advanced examples GetConnector
+##### Advanced examples GetConnector
 Here we will make full use of the config when getting from a GetConnector
 ```js
+const { OrderBy, OperatorTypes } = require('afas-connect/lib/models');
+
 // Getting data using filter
 const config1 = {
   skip: 0, 
@@ -123,32 +175,32 @@ const config1 = {
   orderby: [
     { 
       fieldId: 'Itemcode', 
-      order: 'ASC' 
+      order: OrderBy.Ascending 
     },
     { 
       fieldId: 'Date', 
-      order: 'DESC' 
+      order: OrderBy.Descending
     }
   ], 
   filter: [
     { 
       filterfieldid: 'Itemcode', 
       filtervalue: '12345AB',
-      operatortype: 1, 
+      operatortype: OperatorTypes.EqualTo, 
       or: [
         { 
           filtervalue: '6789CD', 
-          operatortype: 6 
+          operatortype: OperatorTypes.ContainsText
         }, 
         { 
           filtervalue: '0000', 
-          operatortype: 10
+          operatortype: OperatorTypes.StartsWith
         }
       ] 
     }
   ]
 }
-const response1 = await AfasService.GetConnector.get('Profit_Article', config1)
+const response1 = await ProfitService.GetConnector.get('Profit_Article', config1)
 
 // Or, using the jsonFilter 
 const config2 = {
@@ -205,15 +257,15 @@ const config2 = {
     }
   }
 }
-const response2 = await AfasService.GetConnector.get('Profit_Article', config2)
+const response2 = await ProfitService.GetConnector.get('Profit_Article', config2)
 ```
 
-##### UpdateConnector
+#### UpdateConnector
 
 **UpdateConnector.insert(updateconnectorname, body)**
 ```js
 // Inserts a record
-await AfasService.UpdateConnector.insert('FbItemArticle', {
+await ProfitService.UpdateConnector.insert('FbItemArticle', {
   FbItemArticle: {
     Element: {
       Fields: {
@@ -227,7 +279,7 @@ await AfasService.UpdateConnector.insert('FbItemArticle', {
 **UpdateConnector.insertSubUpdateMain(updateconnectorname, subupdateconnectorname, body)**
 ```js
 // Updates main record, inserts sub record
-await AfasService.UpdateConnector.insertSubUpdateMain('FbItemArticle', 'FbArticleCustom', {
+await ProfitService.UpdateConnector.insertSubUpdateMain('FbItemArticle', 'FbArticleCustom', {
   FbItemArticle: {
     Element: {
       Fields: {
@@ -241,7 +293,7 @@ await AfasService.UpdateConnector.insertSubUpdateMain('FbItemArticle', 'FbArticl
 **UpdateConnector.update(updateconnectorname, body)**
 ```js
 // Updates a record
-await AfasService.UpdateConnector.update('FbItemArticle', {
+await ProfitService.UpdateConnector.update('FbItemArticle', {
   FbItemArticle: {
     Element: {
       Fields: {
@@ -254,63 +306,65 @@ await AfasService.UpdateConnector.update('FbItemArticle', {
 **UpdateConnector.delete(updateconnectorname, urlparams)**
 ```js
 // Deletes a record
-await AfasService.UpdateConnector.delete('FbItemArticle', 'FbItemArticle/FbItemArticle/ItCd/123')
+await ProfitService.UpdateConnector.delete('FbItemArticle', 'FbItemArticle/FbItemArticle/ItCd/123')
 ```
 
 **UpdateConnector.metainfo(updateconnectorname)**
 ```js
 // Get metainfo
-const metainfo = await AfasService.UpdateConnector.metainfo('FbItemArticle')
+const metainfo = await ProfitService.UpdateConnector.metainfo('FbItemArticle')
 
 // -> expected response { rows: [...] }
 ```
 
-##### CustomConnector
+#### DataConnector
 
-**CustomConnector.version()**
+**DataConnector.version()**
 ```js
 // Get AFAS version
-const response = await AfasService.CustomConnector.version()
+const response = await ProfitService.DataConnector.version()
 
 // -> expected response { version: "<YOUR AFAS VERSION>" }
 ```
 
-**CustomConnector.file(fileId, fileName)**
+**DataConnector.file(fileId, fileName[, binary])**
 ```js
 // Get file from AFAS
-const response = await AfasService.CustomConnector.file(123, 'report')
+const response = await ProfitService.DataConnector.file(123, 'report', false)
 ```
 
-**CustomConnector.image(format, imageId)**
+**DataConnector.image(format, imageId[, binary])**
+```js
+const { ImageSizes } = require('afas-connect/lib/models');
+
+// Get image from AFAS
+const response = await ProfitService.DataConnector.image(0 or ImageSizes.Original, 'image' [, false])
+```
+
+**DataConnector.subject(subjectId, fileId)**
 ```js
 // Get image from AFAS
-const response = await AfasService.CustomConnector.image(0, 'image')
+const response = await ProfitService.DataConnector.subject(123, 456)
 ```
 
-**CustomConnector.subject(subjectId, fileId)**
+**DataConnector.report(reportId, additionalFilter[, binary])**
 ```js
 // Get image from AFAS
-const response = await AfasService.CustomConnector.subject(123, 456)
+const response = await ProfitService.DataConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1', false)
 ```
 
-**CustomConnector.report(reportId, additionalFilter)**
-```js
-// Get image from AFAS
-const response = await AfasService.CustomConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1')
-```
-
-##### InsiteConnector
+#### InsiteConnector
 
 **InsiteConnector.profile(insitePrivateKey, insiteCodeParam[, intergrationtokenurl])**
 ```js
 // Get profile on Insite
-const profile = await AfasService.InsiteConnector.profile("<INSITE PRIVATE KEY HERE>", "<INSITE 'CODE' URL QUERY PARAM HERE", "<EXAMPLE: https://12345.afasinsite.nl/intergrationtoken>")
+const profile = await ProfitService.InsiteConnector.profile("<INSITE PRIVATE KEY HERE>", "<INSITE 'CODE' URL QUERY PARAM HERE"[, "<EXAMPLE: https://12345.afasinsite.nl/intergrationtoken>"])
 ```
 
 **InsiteConnector.requestOTP(profileUserId, environmentApiKey, EnvironmentKey)**
 ```js
 // Request a user specific token
-const request = await AfasService.InsiteConnector.requestOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>")
+const request = await ProfitService.InsiteConnector.requestOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>")
 ```
 
 **InsiteConnector.validateOTP(profileUserId, environmentApiKey, EnvironmentKey, code)**
@@ -319,7 +373,7 @@ const request = await AfasService.InsiteConnector.requestOTP(profile.userId, "<E
 const userToken = await AfasServiceNoTokenNoEnv.InsiteConnector.validateOTP(profile.userId, "<ENVIRONMENT API KEY HERE>", "<ENVIRONMENT KEY HERE>", "<CODE RECIEVED IN EMAIL HERE>")
 // -> expected response '<YOUR USER TOKEN>'
 ```
-###### Advanced examples InsiteConnector
+##### Advanced examples InsiteConnector
 Using the InsiteConnector in a website intergrated in Insite.
 Here we create an instance without knowing the environment and token.
 ```js
@@ -354,14 +408,14 @@ if (request) {
   AfasServiceNoTokenNoEnv.changeConfig({ token: userToken })
 }
 ```
-#### SOAP
+### SOAP
 
-##### SoapConnector
+#### SoapConnector
 
 **SoapConnector.get(getconnectorname)**
 ```js
 // Get data using SOAP
-const response = await AfasService.SoapConnector.get('Profit_Article')
+const response = await ProfitService.SoapConnector.get('Profit_Article')
 
 // -> expected response { GetDataResult: "<XML DATA STRING />" }
 
@@ -379,7 +433,7 @@ const XMLstring1 = `
     </Element>
 </FbItemArticle>
 `
-await AfasService.SoapConnector.update('FbItemArticle', XMLstring1)
+await ProfitService.SoapConnector.update('FbItemArticle', XMLstring1)
 
 // Update a record
 const XMLstring2 = `
@@ -391,7 +445,7 @@ const XMLstring2 = `
     </Element>
 </FbItemArticle>
 `
-await AfasService.SoapConnector.update('FbItemArticle', XMLstring2)
+await ProfitService.SoapConnector.update('FbItemArticle', XMLstring2)
 
 // Delete a record
 const XMLstring3 = `
@@ -403,10 +457,13 @@ const XMLstring3 = `
     </Element>
 </FbItemArticle>
 `
-await AfasService.SoapConnector.update('FbItemArticle', XMLstring3)
+await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3)
 ```
 
 ### Planned
 
-- Add CustomConnector to SOAP
-- Write better tests
+- DataConnector File upload 
+
+After this I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
+
+From time to time I will probably update this package as things either change or I discover something new. For now, thank you for using this package! :) 

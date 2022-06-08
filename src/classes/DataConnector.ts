@@ -1,8 +1,8 @@
-import { IAfasConfig } from '../models';
+import { IAfasConfig, TImageSizes, ImageSizes } from '../models';
 import Connector from './Connector';
 import { ProfitError } from './ProfitError';
 
-export default class CustomConnector extends Connector {
+export default class DataConnector extends Connector {
   constructor(AfasConfig: IAfasConfig) {
     super({...AfasConfig, type: 'rest'});
   }
@@ -22,11 +22,12 @@ export default class CustomConnector extends Connector {
    * Gets a file from AFAS
    * @param fileId {string} ID of a file in AFAS
    * @param fileName {string} Filename of a file in AFAS
+   * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    * 
    */
-  public async file(fileId: string, fileName: string): Promise<any> {
+  public async file(fileId: string, fileName: string, binary: boolean = false): Promise<any> {
     try {
-      return await this.http(this.afasUrl + 'fileconnector/' + encodeURI(fileId) + '/' + encodeURI(fileName), 'GET');
+      return await this.http(this.afasUrl + 'fileconnector/' + encodeURI(fileId) + '/' + encodeURI(fileName), 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
       throw new ProfitError('An error occured trying to get a file', error);
     }
@@ -36,11 +37,12 @@ export default class CustomConnector extends Connector {
    * Gets an image from AFAS
    * @param format 0: original, 1: thumbnail, 2: medium, sets image format
    * @param imageId {string} ID of image in AFAS
+   * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    * 
    */
-  public async image(format: 0 | 1 | 2, imageId: string): Promise<any> {
+  public async image(format: TImageSizes | ImageSizes, imageId: string, binary: boolean = false): Promise<any> {
     try {
-      return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET');
+      return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
       throw new ProfitError('An error occured trying get an image', error);
     }
@@ -66,10 +68,11 @@ export default class CustomConnector extends Connector {
    * Gets report from AFAS
    * @param reportId {string} ID of report in AFAS
    * @param additionalFilter {string} filters could be: /parsetid/paramid,paramid,../value,value,.. or ?filterfieldids=fieldid,fieldid&filtervalues=value,value&operatortypes=type,type or ?filterjson=json
+   * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    */
-  public async report(reportId: string, additionalFilter: string): Promise<{data: string}> {
+  public async report(reportId: string, additionalFilter: string, binary: boolean = false): Promise<{data: string}> {
     try {
-      return await this.http(this.afasUrl + 'reportconnector/' + encodeURI(reportId) + additionalFilter, 'GET');
+      return await this.http(this.afasUrl + 'reportconnector/' + encodeURI(reportId) + additionalFilter, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
       throw new ProfitError('An error occured trying to get a report', error);
     }
