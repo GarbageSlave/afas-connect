@@ -464,6 +464,6 @@ await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3)
 
 - DataConnector File upload 
 
-Furthermore I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
+After this I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
 
 From time to time I will probably update this package as things either change or I discover something new. For now, thank you for using this package! :) 
