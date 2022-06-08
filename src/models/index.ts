@@ -218,16 +218,10 @@ export type TFilterOr = {
   operatortype: TOperatorTypes | OperatorTypes,
 }[]
 
-export type TFilterAnd = {
-  filtervalue: string,
-  operatortype: TOperatorTypes | OperatorTypes,
-}[]
-
 export type TFilter = {
   filterfieldid: string,
   filtervalue: string,
   operatortype: TOperatorTypes | OperatorTypes,
-  and?: TFilterAnd
   or?: TFilterOr,
 }[]
 

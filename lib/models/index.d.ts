@@ -69,15 +69,10 @@ export declare type TFilterOr = {
     filtervalue: string;
     operatortype: TOperatorTypes | OperatorTypes;
 }[];
-export declare type TFilterAnd = {
-    filtervalue: string;
-    operatortype: TOperatorTypes | OperatorTypes;
-}[];
 export declare type TFilter = {
     filterfieldid: string;
     filtervalue: string;
     operatortype: TOperatorTypes | OperatorTypes;
-    and?: TFilterAnd;
     or?: TFilterOr;
 }[];
 export interface IFilterConfig {
