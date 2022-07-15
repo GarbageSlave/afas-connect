@@ -18,7 +18,7 @@ export default class GetConnector extends Connector {
      *
      * @returns the first entry as an Object. If nothing was found returns Null
      */
-    getOne(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse>;
+    getOne(getConnectorName: string, config?: IFilterConfig): Promise<object>;
     /**
      * Fetch the metadata of a GetConnector
      * If getConnectorName is left empty, gives the list of all connectors, use Profit.metainfo() then instead

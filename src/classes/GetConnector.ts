@@ -118,7 +118,7 @@ export default class GetConnector extends Connector {
    * 
    * @returns the first entry as an Object. If nothing was found returns Null
    */
-  public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse> {
+  public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<object> {
     try {
       const response = await this.http(this.connectorUrl + getConnectorName + this.parseConfig({...config, skip: 0, take: 1} || {}), 'GET');
       return response.rows[0] || null
