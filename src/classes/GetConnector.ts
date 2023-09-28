@@ -84,13 +84,13 @@ export default class GetConnector extends Connector {
       // JSONfilter query
       // check if the property exists
       if (Object.keys(config.jsonFilter || {}).length) {
-        result.filterjson = encodeURI(JSON.stringify(config.jsonFilter))
+        result.filterjson = JSON.stringify(config.jsonFilter)
       }
     }
 
     // map query
-    const query = Object.keys(result).map(k => `${k}=${result[k]}`).join('&');
-    return encodeURI('?' + query);
+    const query = Object.keys(result).map(k => `${k}=${encodeURIComponent(result[k])}`).join('&');
+    return '?' + query;
     } catch (error) {
       throw error;
     }
@@ -100,7 +100,7 @@ export default class GetConnector extends Connector {
    * Get data from GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
    * @param config {IFilterConfig} Filter config
-   * 
+   *
    * @returns Example: { skip: 0, take: 100, rows: [your data] }
    */
   public async get(getConnectorName: string, config?: IFilterConfig): Promise<TAfasRestDataResponse> {
@@ -115,7 +115,7 @@ export default class GetConnector extends Connector {
    * Get just one row from GetConnector
    * @param getConnectorName {string} GetConnector name, example: Profit_Article
    * @param config {IFilterConfig} Filter config
-   * 
+   *
    * @returns the first entry as an Object. If nothing was found returns Null
    */
   public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<object> {
