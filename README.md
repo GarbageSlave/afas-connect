@@ -39,7 +39,7 @@ const { Profit } = require('afas-connect');
 const { Languages, EnvTypes } = require('afas-connect/lib/models');
 
 const ProfitService = new Profit({
-  token: '<YOUR_TOKEN_HERE>',
+  token: '<YOUR_TOKEN_HERE>', // <token><version>1</version><data>....</data></token>
   env: '12345',
   envType: EnvTypes.Production, // or 'production' like in v2.x
   // Optional
@@ -121,7 +121,7 @@ const response = await ProfitService.GetConnector.get('Profit_Article' [, config
 const metainfo = await ProfitService.GetConnector.metainfo('Profit_Article')
 
 // -> expected response { rows: [...] }
-// If left empty, example .metainfo(''), gives a list of all connectors, use Profit.metainfo() then instead
+// If left empty, for example .metainfo(''), it will give a list of all connectors. Use Profit.metainfo() then instead
 ```
 ##### GetConnector Config Schema
 ```js
@@ -337,20 +337,20 @@ const response = await ProfitService.DataConnector.file(123, 'report', false)
 ```js
 const { ImageSizes } = require('afas-connect/lib/models');
 
-// Get image from AFAS
+// Get an image from AFAS
 const response = await ProfitService.DataConnector.image(0 or ImageSizes.Original, 'image' [, false])
 ```
 
 **DataConnector.subject(subjectId, fileId)**
 ```js
-// Get image from AFAS
+// Get a subject from AFAS
 const response = await ProfitService.DataConnector.subject(123, 456)
 ```
 
 **DataConnector.report(reportId, additionalFilter[, binary])**
 ```js
-// Get image from AFAS
-const response = await ProfitService.DataConnector.subject(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1', false)
+// Get a report from AFAS
+const response = await ProfitService.DataConnector.report(123, '?filterfieldids=Project&filtervalues=Test&operatortypes=1', false)
 ```
 
 #### InsiteConnector
@@ -464,6 +464,6 @@ await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3)
 
 - DataConnector File upload 
 
-After this I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438
+After this I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438, @garbageslave
 
 From time to time I will probably update this package as things either change or I discover something new. For now, thank you for using this package! :) 

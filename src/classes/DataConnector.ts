@@ -27,7 +27,7 @@ export default class DataConnector extends Connector {
    */
   public async file(fileId: string, fileName: string, binary: boolean = false): Promise<any> {
     try {
-      return await this.http(this.afasUrl + 'fileconnector/' + encodeURI(fileId) + '/' + encodeURI(fileName), 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
+      return await this.http(this.afasUrl + 'fileconnector/' + encodeURIComponent(fileId) + '/' + encodeURIComponent(fileName), 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
       throw new ProfitError('An error occured trying to get a file', error);
     }
@@ -56,7 +56,7 @@ export default class DataConnector extends Connector {
   public async subject(subjectId: string, fileId: string): Promise<any> {
     try {
       return await this.http(
-        this.afasUrl + 'subjectconnector/' + encodeURI(subjectId) + '/' + encodeURI(fileId),
+        this.afasUrl + 'subjectconnector/' + encodeURIComponent(subjectId) + '/' + encodeURIComponent(fileId),
         'GET',
       );
     } catch (error:any) {
@@ -72,7 +72,7 @@ export default class DataConnector extends Connector {
    */
   public async report(reportId: string, additionalFilter: string, binary: boolean = false): Promise<{data: string}> {
     try {
-      return await this.http(this.afasUrl + 'reportconnector/' + encodeURI(reportId) + additionalFilter, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
+      return await this.http(this.afasUrl + 'reportconnector/' + encodeURIComponent(reportId) + additionalFilter, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
       throw new ProfitError('An error occured trying to get a report', error);
     }
