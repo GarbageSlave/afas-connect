@@ -1,6 +1,6 @@
 import fetch, { RequestInit } from 'node-fetch';
 import * as soap from 'soap'
-import { IAfasConnectorConfig, Languages, TAfasRestProfileResponse, THttpMethods } from '../models';
+import { IAfasConnectorConfig, IOtpResponse, Languages, TAfasRestProfileResponse, THttpMethods } from '../models';
 import { endpoints } from '../constants';
 
 export default abstract class Connector {
@@ -56,7 +56,7 @@ export default abstract class Connector {
       }
     })
     if (response.ok) {
-      return await response.json()
+      return await response.json() as TAfasRestProfileResponse
     } else {
       return false
     }
@@ -92,7 +92,7 @@ export default abstract class Connector {
     const response = await fetch(url, { method: "POST", body: JSON.stringify(data) })
 
     if (response.ok) {
-      const body = await response.json()
+      const body: IOtpResponse = await response.json() as IOtpResponse
       return body.token
     } else {
       return false

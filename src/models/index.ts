@@ -268,3 +268,7 @@ export interface IAfasMetaInfo {
   fields: object[];
   objects?: IAfasMetaInfo[];
 }
+
+export interface IOtpResponse {
+  token: string;
+}
