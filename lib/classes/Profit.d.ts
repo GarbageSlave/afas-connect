@@ -20,6 +20,6 @@ export declare class Profit {
     metainfo(): Promise<import("../models").TAfasRestDataResponse>;
     get config(): {
         environment: string;
-        environmentType: "production" | "test" | "accept" | import("../models").EnvTypes;
+        environmentType: ("production" | "test" | "accept") | import("../models").EnvTypes;
     };
 }
