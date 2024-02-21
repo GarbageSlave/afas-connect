@@ -1,9 +1,13 @@
-// With the update to node-fetch from 2.x to 3.x jest was giving me problems
-// "SyntaxError: Cannot use import statement outside a module"
-// I can't be bothered to fix this so for now it's a bs test :)
+const {Profit} = require('../../lib/index')
+const { Languages, EnvTypes } = require('afas-connect/lib/models');
 
-const config = { environment: '', environmentType: 'production' }
+const ProfitService = new Profit({
+  token: '<YOUR_TOKEN_HERE>',
+  env: '12345',
+  envType: EnvTypes.Production,
+  language: Languages.Dutch
+})
 
 test('Afas config', () => {
-  expect(config).toStrictEqual({ environment: '', environmentType: 'production' });
+  expect(ProfitService.config).toStrictEqual({ environment: '12345', environmentType: EnvTypes.Production });
 });

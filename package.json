@@ -1,6 +1,6 @@
 {
   "name": "afas-connect",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "An API that makes it easy to connect to Afas Profit REST services written entirely in TypeScript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -47,7 +47,7 @@
     "connect"
   ],
   "dependencies": {
-    "node-fetch": "^3.3.2",
+    "node-fetch": "^2.7.0",
     "soap": "0.45.0"
   }
 }
