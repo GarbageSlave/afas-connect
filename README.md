@@ -461,7 +461,7 @@ await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3)
 ```
 
 ### Planned
-
+- Node fetch to Axios migration
 - DataConnector File upload 
 
 After this I consider this package to be fairly complete, however! If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438, @garbageslave

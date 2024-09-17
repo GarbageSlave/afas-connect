@@ -14,7 +14,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async insert(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
+  public async insert(updateConnectorName: TUpdateConnectorName, payload: Record<string, any>): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'POST', payload);
     } catch (error:any) {
@@ -29,7 +29,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async update(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any> {
+  public async update(updateConnectorName: TUpdateConnectorName, payload: Record<string, any>): Promise<any> {
     try {
       return await this.http(this.connectorUrl + updateConnectorName, 'PUT', payload);
     } catch (error:any) {
@@ -60,7 +60,7 @@ export default class UpdateConnector extends Connector {
    * 
    * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
    */
-  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object): Promise<any> {
+  public async insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: Record<string, any>): Promise<any> {
     try {
       return await this.http(
         this.connectorUrl + updateConnectorName + '/' + subUpdateConnectorName,
@@ -76,7 +76,7 @@ export default class UpdateConnector extends Connector {
    * Fetch the metadata of an UpdateConnector
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
    * 
-   * @returns { skip: number, take: number, rows: object[] }
+   * @returns { skip: number, take: number, rows: Record<string, any>[] }
    */
   public async metainfo(updateConnectorName: TUpdateConnectorName): Promise<TAfasRestDataResponse> {
     try {

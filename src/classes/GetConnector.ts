@@ -118,7 +118,7 @@ export default class GetConnector extends Connector {
    *
    * @returns the first entry as an Object. If nothing was found returns Null
    */
-  public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<object> {
+  public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<Record<string, any> | null> {
     try {
       const response = await this.http(this.connectorUrl + getConnectorName + this.parseConfig({...config, skip: 0, take: 1} || {}), 'GET');
       return response.rows[0] || null

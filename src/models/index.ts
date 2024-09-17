@@ -49,7 +49,7 @@ type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14
 export type TAfasRestDataResponse = { 
   skip: number, 
   take: number, 
-  rows: object[] 
+  rows: Record<string, any>[] 
 }
 
 export type TAfasRestProfileResponse = {
@@ -238,7 +238,7 @@ export interface IFilterConfig {
   take?: number, 
   orderby?: TOrderBy
   filter?: TFilter,
-  jsonFilter?: object
+  jsonFilter?: Record<string, any>
 }
 
 export interface ISoapFilterConfig {
@@ -258,14 +258,14 @@ export type THttpMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface IAfasGetResponse {
   skip: number;
   take: number;
-  rows: object[];
+  rows: Record<string, any>[];
 }
 
 export interface IAfasMetaInfo {
   id: string;
   description?: string;
   name?: string;
-  fields: object[];
+  fields: Record<string, any>[];
   objects?: IAfasMetaInfo[];
 }
 

@@ -107,7 +107,7 @@ export default abstract class Connector {
    * @param body {string} Optional, should be a valid JSON object
    * @param customConfig {RequestInit} default http request config
    */
-  protected async http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any> {
+  protected async http(url: string, method: THttpMethods, body?: { [key:string] : any }, customConfig?: RequestInit): Promise<any> {
     return new Promise (async (resolve, reject) => {
       let config: RequestInit = {
         method,
@@ -147,7 +147,7 @@ export default abstract class Connector {
    * @param methodname {string} client methodname
    * @returns any
    */
-  protected async execute (url: string, args: object, methodname: string): Promise<any> {
+  protected async execute (url: string, args: { [key:string] : any }, methodname: string): Promise<any> {
     return await new Promise(async (resolve, reject) => {
       soap.createClientAsync(url)
         .then(client => {

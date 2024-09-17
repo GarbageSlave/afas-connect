@@ -25,7 +25,7 @@ export default class DataConnector extends Connector {
    * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    * 
    */
-  public async file(fileId: string, fileName: string, binary: boolean = false): Promise<any> {
+  public async file(fileId: string | number, fileName: string, binary: boolean = false): Promise<any> {
     try {
       return await this.http(this.afasUrl + 'fileconnector/' + encodeURIComponent(fileId) + '/' + encodeURIComponent(fileName), 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
@@ -40,7 +40,7 @@ export default class DataConnector extends Connector {
    * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    * 
    */
-  public async image(format: TImageSizes | ImageSizes, imageId: string, binary: boolean = false): Promise<any> {
+  public async image(format: TImageSizes | ImageSizes, imageId: string | number, binary: boolean = false): Promise<any> {
     try {
       return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
@@ -53,7 +53,7 @@ export default class DataConnector extends Connector {
    * @param subjectId {string} ID of subject in AFAS
    * @param fileId {string} ID of file in AFAS
    */
-  public async subject(subjectId: string, fileId: string): Promise<any> {
+  public async subject(subjectId: string | number, fileId: string | number): Promise<any> {
     try {
       return await this.http(
         this.afasUrl + 'subjectconnector/' + encodeURIComponent(subjectId) + '/' + encodeURIComponent(fileId),
@@ -70,7 +70,7 @@ export default class DataConnector extends Connector {
    * @param additionalFilter {string} filters could be: /parsetid/paramid,paramid,../value,value,.. or ?filterfieldids=fieldid,fieldid&filtervalues=value,value&operatortypes=type,type or ?filterjson=json
    * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
    */
-  public async report(reportId: string, additionalFilter: string, binary: boolean = false): Promise<{data: string}> {
+  public async report(reportId: string | number, additionalFilter: string, binary: boolean = false): Promise<{data: string}> {
     try {
       return await this.http(this.afasUrl + 'reportconnector/' + encodeURIComponent(reportId) + additionalFilter, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
     } catch (error:any) {
