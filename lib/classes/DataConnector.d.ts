@@ -15,7 +15,7 @@ export default class DataConnector extends Connector {
      * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
      *
      */
-    file(fileId: string, fileName: string, binary?: boolean): Promise<any>;
+    file(fileId: string | number, fileName: string, binary?: boolean): Promise<any>;
     /**
      * Gets an image from AFAS
      * @param format 0: original, 1: thumbnail, 2: medium, sets image format
@@ -23,20 +23,20 @@ export default class DataConnector extends Connector {
      * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
      *
      */
-    image(format: TImageSizes | ImageSizes, imageId: string, binary?: boolean): Promise<any>;
+    image(format: TImageSizes | ImageSizes, imageId: string | number, binary?: boolean): Promise<any>;
     /**
      * Gets a subject from AFAS
      * @param subjectId {string} ID of subject in AFAS
      * @param fileId {string} ID of file in AFAS
      */
-    subject(subjectId: string, fileId: string): Promise<any>;
+    subject(subjectId: string | number, fileId: string | number): Promise<any>;
     /**
      * Gets report from AFAS
      * @param reportId {string} ID of report in AFAS
      * @param additionalFilter {string} filters could be: /parsetid/paramid,paramid,../value,value,.. or ?filterfieldids=fieldid,fieldid&filtervalues=value,value&operatortypes=type,type or ?filterjson=json
      * @param binary {boolean} If true, will return the file in binary instead of { filedata, mimetype }
      */
-    report(reportId: string, additionalFilter: string, binary?: boolean): Promise<{
+    report(reportId: string | number, additionalFilter: string, binary?: boolean): Promise<{
         data: string;
     }>;
 }

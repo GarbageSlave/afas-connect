@@ -23,7 +23,9 @@ export default abstract class Connector {
      * @param body {string} Optional, should be a valid JSON object
      * @param customConfig {RequestInit} default http request config
      */
-    protected http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any>;
+    protected http(url: string, method: THttpMethods, body?: {
+        [key: string]: any;
+    }, customConfig?: RequestInit): Promise<any>;
     /**
      *
      * @param url {string} WSDL url
@@ -31,5 +33,7 @@ export default abstract class Connector {
      * @param methodname {string} client methodname
      * @returns any
      */
-    protected execute(url: string, args: object, methodname: string): Promise<any>;
+    protected execute(url: string, args: {
+        [key: string]: any;
+    }, methodname: string): Promise<any>;
 }

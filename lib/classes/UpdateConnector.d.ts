@@ -9,7 +9,7 @@ export default class UpdateConnector extends Connector {
      *
      * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
      */
-    insert(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any>;
+    insert(updateConnectorName: TUpdateConnectorName, payload: Record<string, any>): Promise<any>;
     /**
      * Updates a record
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
@@ -17,7 +17,7 @@ export default class UpdateConnector extends Connector {
      *
      * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
      */
-    update(updateConnectorName: TUpdateConnectorName, payload: object): Promise<any>;
+    update(updateConnectorName: TUpdateConnectorName, payload: Record<string, any>): Promise<any>;
     /**
      * Deletes a record
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
@@ -34,12 +34,12 @@ export default class UpdateConnector extends Connector {
      *
      * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
      */
-    insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: object): Promise<any>;
+    insertSubUpdateMain(updateConnectorName: TUpdateConnectorName, subUpdateConnectorName: string, payload: Record<string, any>): Promise<any>;
     /**
      * Fetch the metadata of an UpdateConnector
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
      *
-     * @returns { skip: number, take: number, rows: object[] }
+     * @returns { skip: number, take: number, rows: Record<string, any>[] }
      */
     metainfo(updateConnectorName: TUpdateConnectorName): Promise<TAfasRestDataResponse>;
 }
