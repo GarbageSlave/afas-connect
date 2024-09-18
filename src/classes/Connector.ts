@@ -122,7 +122,7 @@ export default abstract class Connector {
       }
   
       if (customHeaders) {
-        for (const key in customHeaders) {
+        for (const key of Object.keys(customHeaders)) {
           config.headers[key] = customHeaders[key]
         }
       }
