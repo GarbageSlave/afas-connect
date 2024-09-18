@@ -27,7 +27,7 @@ export default class DataConnector extends Connector {
    */
   public async file(fileId: string | number, fileName: string, binary: boolean = false): Promise<any> {
     try {
-      return await this.http(this.afasUrl + 'fileconnector/' + encodeURIComponent(fileId) + '/' + encodeURIComponent(fileName), 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
+      return await this.http(this.afasUrl + 'fileconnector/' + encodeURIComponent(fileId) + '/' + encodeURIComponent(fileName), 'GET', undefined, { SendFileAsBinary : binary ? "1" : "0" });
     } catch (error:any) {
       throw new ProfitError('An error occured trying to get a file', error);
     }
@@ -42,7 +42,7 @@ export default class DataConnector extends Connector {
    */
   public async image(format: TImageSizes | ImageSizes, imageId: string | number, binary: boolean = false): Promise<any> {
     try {
-      return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
+      return await this.http(this.afasUrl + 'imageconnector/' + imageId + '?format=' + format, 'GET', undefined, { SendFileAsBinary : binary ? "1" : "0" });
     } catch (error:any) {
       throw new ProfitError('An error occured trying get an image', error);
     }
@@ -72,7 +72,7 @@ export default class DataConnector extends Connector {
    */
   public async report(reportId: string | number, additionalFilter: string, binary: boolean = false): Promise<{data: string}> {
     try {
-      return await this.http(this.afasUrl + 'reportconnector/' + encodeURIComponent(reportId) + additionalFilter, 'GET', undefined, { headers: { SendFileAsBinary : binary ? "1" : "0" }});
+      return await this.http(this.afasUrl + 'reportconnector/' + encodeURIComponent(reportId) + additionalFilter, 'GET', undefined, { SendFileAsBinary : binary ? "1" : "0" });
     } catch (error:any) {
       throw new ProfitError('An error occured trying to get a report', error);
     }

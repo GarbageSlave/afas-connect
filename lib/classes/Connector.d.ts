@@ -1,4 +1,3 @@
-import { RequestInit } from 'node-fetch';
 import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models';
 export default abstract class Connector {
     private AfasConfig;
@@ -21,11 +20,9 @@ export default abstract class Connector {
      * @param url {string} http://example.com
      * @param method {string} GET, POST, PUT, DELETE
      * @param body {string} Optional, should be a valid JSON object
-     * @param customConfig {RequestInit} default http request config
+     * @param customHeaders {object} Add some custom headers
      */
-    protected http(url: string, method: THttpMethods, body?: {
-        [key: string]: any;
-    }, customConfig?: RequestInit): Promise<any>;
+    protected http(url: string, method: THttpMethods, body?: Record<string, any>, customHeaders?: Record<string, any>): Promise<any>;
     /**
      *
      * @param url {string} WSDL url
@@ -33,7 +30,5 @@ export default abstract class Connector {
      * @param methodname {string} client methodname
      * @returns any
      */
-    protected execute(url: string, args: {
-        [key: string]: any;
-    }, methodname: string): Promise<any>;
+    protected execute(url: string, args: Record<string, any>, methodname: string): Promise<any>;
 }

@@ -105,11 +105,11 @@ export default abstract class Connector {
    * @param url {string} http://example.com
    * @param method {string} GET, POST, PUT, DELETE
    * @param body {string} Optional, should be a valid JSON object
-   * @param customConfig {RequestInit} default http request config
+   * @param customHeaders {object} Add some custom headers
    */
-  protected async http(url: string, method: THttpMethods, body?: { [key:string] : any }, customConfig?: RequestInit): Promise<any> {
+  protected async http(url: string, method: THttpMethods, body?: Record<string, any>, customHeaders?: Record<string, any>): Promise<any> {
     return new Promise (async (resolve, reject) => {
-      let config: RequestInit = {
+      let config: RequestInit | any = {
         method,
         headers: {
           Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
@@ -121,8 +121,10 @@ export default abstract class Connector {
         config.body = JSON.stringify(body);
       }
   
-      if (customConfig) {
-        config = { ...config, ...customConfig };
+      if (customHeaders) {
+        for (const key in customHeaders) {
+          config.headers[key] = customHeaders[key]
+        }
       }
   
       const response = await fetch(url, config)
@@ -147,7 +149,7 @@ export default abstract class Connector {
    * @param methodname {string} client methodname
    * @returns any
    */
-  protected async execute (url: string, args: { [key:string] : any }, methodname: string): Promise<any> {
+  protected async execute (url: string, args: Record<string, any>, methodname: string): Promise<any> {
     return await new Promise(async (resolve, reject) => {
       soap.createClientAsync(url)
         .then(client => {
