@@ -109,7 +109,7 @@ export default abstract class Connector {
    */
   protected async http(url: string, method: THttpMethods, body?: Record<string, any>, customHeaders?: Record<string, any>): Promise<any> {
     return new Promise (async (resolve, reject) => {
-      let config: RequestInit | any = {
+      const config: RequestInit | any = {
         method,
         headers: {
           Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
