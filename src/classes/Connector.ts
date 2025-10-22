@@ -127,17 +127,20 @@ export default abstract class Connector {
         }
       }
   
-      const response = await fetch(url, config)
-      const rawBody = await response.text();
-  
-      if (response.ok) {
-        try {
-          resolve(JSON.parse(rawBody))
-        } catch (error) {
-          resolve(rawBody)
+      try {
+        const response = await fetch(url, config)
+        const rawBody = await response.text();
+        if (response.ok) {
+          try {
+            resolve(JSON.parse(rawBody))
+          } catch (error) {
+            resolve(rawBody)
+          }
+        } else {
+          reject({ body: rawBody, response })
         }
-      } else {
-        reject({ body: rawBody, response })
+      } catch (error) {
+        reject(`Failed [${method}]:${url}, ${error}`)
       }
     })
   }
