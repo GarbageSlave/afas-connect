@@ -1,5 +1,5 @@
-import { IAfasConfig, TImageSizes, ImageSizes } from '../models';
-import Connector from './Connector';
+import { IAfasConfig, TImageSizes, ImageSizes } from '../models/index.js';
+import Connector from './Connector.js';
 export default class DataConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     /**

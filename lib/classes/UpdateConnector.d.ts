@@ -1,5 +1,5 @@
-import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index';
-import Connector from './Connector';
+import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index.js';
+import Connector from './Connector.js';
 export default class UpdateConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     /**

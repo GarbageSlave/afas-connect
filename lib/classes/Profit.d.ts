@@ -1,9 +1,9 @@
-import GetConnector from './GetConnector';
-import UpdateConnector from './UpdateConnector';
-import DataConnector from './DataConnector';
-import SoapConnector from './SoapConnector';
-import InsiteConnector from './InsiteConnector';
-import { IAfasConfig } from '../models';
+import GetConnector from './GetConnector.js';
+import UpdateConnector from './UpdateConnector.js';
+import DataConnector from './DataConnector.js';
+import SoapConnector from './SoapConnector.js';
+import InsiteConnector from './InsiteConnector.js';
+import { IAfasConfig } from '../models/index.js';
 export declare class Profit {
     private _AfasConfig;
     GetConnector: GetConnector;
@@ -17,9 +17,9 @@ export declare class Profit {
     CustomConnector: DataConnector;
     constructor(AfasConfig: IAfasConfig);
     changeConfig(AfasConfig: IAfasConfig): void;
-    metainfo(): Promise<import("../models").TAfasRestDataResponse>;
+    metainfo(): Promise<import("../models/index.js").TAfasRestDataResponse>;
     get config(): {
         environment: string;
-        environmentType: ("production" | "test" | "accept") | import("../models").EnvTypes;
+        environmentType: ("production" | "test" | "accept") | import("../models/index.js").EnvTypes;
     };
 }

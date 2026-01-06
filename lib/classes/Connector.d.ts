@@ -1,4 +1,4 @@
-import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models';
+import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models/index.js';
 export default abstract class Connector {
     private AfasConfig;
     constructor(AfasConfig: IAfasConnectorConfig);
