@@ -1,10 +1,10 @@
-import GetConnector from './GetConnector';
-import UpdateConnector from './UpdateConnector';
-import DataConnector from './DataConnector';
-import SoapConnector from './SoapConnector';
-import InsiteConnector from './InsiteConnector';
+import GetConnector from './GetConnector.js';
+import UpdateConnector from './UpdateConnector.js';
+import DataConnector from './DataConnector.js';
+import SoapConnector from './SoapConnector.js';
+import InsiteConnector from './InsiteConnector.js';
 
-import { IAfasConfig } from '../models';
+import { IAfasConfig } from '../models/index.js';
 
 export class Profit {
   private _AfasConfig: IAfasConfig;
@@ -31,7 +31,7 @@ export class Profit {
   }
 
   public changeConfig(AfasConfig: IAfasConfig) {
-    this._AfasConfig = {...this._AfasConfig, ...AfasConfig};
+    this._AfasConfig = { ...this._AfasConfig, ...AfasConfig };
     this.GetConnector = new GetConnector(this._AfasConfig);
     this.UpdateConnector = new UpdateConnector(this._AfasConfig);
     this.DataConnector = new DataConnector(this._AfasConfig);
@@ -45,7 +45,7 @@ export class Profit {
     try {
       return await this.GetConnector.metainfo();
     } catch (error) {
-      throw error;      
+      throw error;
     }
   }
 

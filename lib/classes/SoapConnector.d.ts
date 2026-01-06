@@ -1,5 +1,5 @@
-import { IAfasConfig, ISoapFilterConfig, TUpdateConnectorName } from '../models';
-import Connector from './Connector';
+import { IAfasConfig, ISoapFilterConfig, TUpdateConnectorName } from '../models/index.js';
+import Connector from './Connector.js';
 export default class SoapConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     /**

@@ -1,5 +1,5 @@
-import { IAfasConfig, TAfasRestProfileResponse } from '../models';
-import Connector from './Connector';
+import { IAfasConfig, TAfasRestProfileResponse } from '../models/index.js';
+import Connector from './Connector.js';
 export default class InsiteConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     private formUrlEncoded;

@@ -1,5 +1,5 @@
-import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models';
-import Connector from './Connector';
+import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models/index.js';
+import Connector from './Connector.js';
 export default class GetConnector extends Connector {
     constructor(AfasConfig: IAfasConfig);
     private parseConfig;

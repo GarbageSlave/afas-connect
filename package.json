@@ -1,9 +1,20 @@
 {
+  "type": "module",
   "name": "afas-connect",
-  "version": "3.0.7",
+  "version": "4.0.0",
   "description": "An API that makes it easy to connect to Afas Profit REST services written entirely in TypeScript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./models": {
+      "types": "./lib/models/index.d.ts",
+      "default": "./lib/models/index.js"
+    }
+  },
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
@@ -26,7 +37,6 @@
   "homepage": "https://github.com/GarbageSlave/afas-connect#readme",
   "devDependencies": {
     "@types/jest": "^29.5.12",
-    "@types/node-fetch": "^2.6.11",
     "@types/sax": "^1.2.7",
     "jest": "^29.7.0",
     "prettier": "^3.2.5",
@@ -47,7 +57,7 @@
     "connect"
   ],
   "dependencies": {
-    "node-fetch": "^2.7.0",
+    "node-fetch": "^3.3.2",
     "soap": "0.45.0"
   }
 }
