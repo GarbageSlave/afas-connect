@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "test": "jest --config jestconfig.json",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
