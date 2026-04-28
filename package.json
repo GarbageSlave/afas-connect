@@ -1,8 +1,8 @@
 {
   "type": "module",
   "name": "afas-connect",
-  "version": "4.0.0",
-  "description": "An API that makes it easy to connect to Afas Profit REST services written entirely in TypeScript.",
+  "version": "4.0.1",
+  "description": "An all-in-one API that makes it easy to connect to Afas Profit REST / SOAP services written entirely in TypeScript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "exports": {
@@ -54,10 +54,14 @@
     "Connect",
     "afas",
     "Afas",
-    "connect"
+    "connect",
+    "API",
+    "TypeScript",
+    "REST",
+    "SOAP"
   ],
   "dependencies": {
     "node-fetch": "^3.3.2",
-    "soap": "0.45.0"
+    "soap": "^1.9.1"
   }
 }

@@ -37,6 +37,7 @@ $ yarn add afas-connect
 ### Initializing
 
 #### v4.x - ESM Support
+CommonJS is no longer supported in this version.
 
 ```js
 import { Profit, EnvTypes, Languages } from 'afas-connect';
