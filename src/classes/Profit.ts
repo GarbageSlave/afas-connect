@@ -30,11 +30,12 @@ export class Profit {
   public changeConfig(AfasConfig: IAfasConfig) {
     // token and oauth are alternatives, so the new config replaces whichever one was used
     const { token, oauth: currentOAuth, ...current } = this.AfasConfig;
-    this.AfasConfig = { ...current, ...AfasConfig };
-    // Keep the current access token when the new config authenticates the same way
-    if (!this.auth.matches(this.AfasConfig)) {
-      this.auth = new Authentication(this.AfasConfig);
+    const config: IAfasConfig = { ...current, ...AfasConfig };
+    // Keep the current access token when the new config authenticates the same way.
+    if (!this.auth.matches(config)) {
+      this.auth = new Authentication(config);
     }
+    this.AfasConfig = config;
     this.GetConnector = new GetConnector(this.AfasConfig, this.auth);
     this.UpdateConnector = new UpdateConnector(this.AfasConfig, this.auth);
     this.DataConnector = new DataConnector(this.AfasConfig, this.auth);

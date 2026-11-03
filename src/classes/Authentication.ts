@@ -16,6 +16,10 @@ export default class Authentication {
   private pending?: Promise<string>;
 
   constructor(AfasConfig: IAfasConfig) {
+    // Sanity check
+    if (Boolean(AfasConfig.token) === Boolean(AfasConfig.oauth)) {
+      throw new Error('Invalid authentication combination: pass either token or oauth');
+    }
     this.token = AfasConfig.token;
     this.oauth = AfasConfig.oauth;
     this.tokenUrl = oauthTokenUrl(AfasConfig);
