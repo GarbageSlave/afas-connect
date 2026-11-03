@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "afas-connect",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "An all-in-one, zero dependency API that makes it easy to connect to Afas Profit REST / SOAP services written entirely in TypeScript.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
