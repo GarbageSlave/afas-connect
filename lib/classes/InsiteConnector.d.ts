@@ -1,7 +1,8 @@
 import { IAfasConfig, TAfasRestProfileResponse } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 export default class InsiteConnector extends Connector {
-    constructor(AfasConfig: IAfasConfig);
+    constructor(AfasConfig: IAfasConfig, auth: Authentication);
     private formUrlEncoded;
     get url(): string;
     /**

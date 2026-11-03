@@ -1,7 +1,8 @@
 import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 export default class UpdateConnector extends Connector {
-    constructor(AfasConfig: IAfasConfig);
+    constructor(AfasConfig: IAfasConfig, auth: Authentication);
     /**
      * Inserts a record
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example: "KnAppointment"

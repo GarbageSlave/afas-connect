@@ -13,7 +13,7 @@ export enum OperatorTypes {
   DoesNotStartWith = 12,
   EndsWith = 13,
   DoesNotEndWith = 14,
-  QuickFilter = 15
+  QuickFilter = 15,
 }
 
 export enum Languages {
@@ -22,47 +22,47 @@ export enum Languages {
   French = 'fr-fr',
   German = 'de-de',
   // English = 'en-us',
-  English = 'en-en'
+  English = 'en-en',
 }
 
 export enum EnvTypes {
-  Production = "production",
-  Test = "test",
-  Accept = "accept"
+  Production = 'production',
+  Test = 'test',
+  Accept = 'accept',
 }
 
 export enum OrderBy {
-  Ascending = "ASC",
-  Descending = "DESC"
+  Ascending = 'ASC',
+  Descending = 'DESC',
 }
 
 export enum ImageSizes {
   Original = 0,
   Medium = 2,
-  Thumbnail = 1
+  Thumbnail = 1,
 }
 
-export type TImageSizes =  0 | 1 | 2
+export type TImageSizes = 0 | 1 | 2;
 
-type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
+type TOperatorTypes = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 
-export type TAfasRestDataResponse = { 
-  skip: number, 
-  take: number, 
-  rows: Record<string, any>[] 
-}
+export type TAfasRestDataResponse = {
+  skip: number;
+  take: number;
+  rows: Record<string, any>[];
+};
 
 export type TAfasRestProfileResponse = {
-  environmentId: string,
-  sessionId: string,
-  userId: string,
-  personCode: string,
-  contactId: string,
-  organizationCode: string,
-  employeeId: string,
-  cssUrl: string,
-  scriptUrl: string
-}
+  environmentId: string;
+  sessionId: string;
+  userId: string;
+  personCode: string;
+  contactId: string;
+  organizationCode: string;
+  employeeId: string;
+  cssUrl: string;
+  scriptUrl: string;
+};
 
 type TAfasConfigEnvType = 'production' | 'test' | 'accept';
 
@@ -196,61 +196,70 @@ export type TUpdateConnectorName =
   | 'PtConProjectForecast'
   | 'PtMeasurement';
 
-type TLanguages =
-  | 'nl-nl' 
-  | 'nl-be' 
-  | 'fr-fr' 
-  | 'de-de' 
-  | 'en-en';
+type TLanguages = 'nl-nl' | 'nl-be' | 'fr-fr' | 'de-de' | 'en-en';
 
-export interface IAfasConfig {
+export type TAfasOAuthConfig =
+  | {
+      clientId: string;
+      clientSecret: string;
+    }
+  | {
+      accessToken: string | ((renew: boolean) => string | Promise<string>);
+    };
+
+interface IAfasBaseConfig {
   env: string;
   envType: TAfasConfigEnvType | EnvTypes;
-  token: string;
   language?: TLanguages | Languages;
 }
 
-export interface IAfasConnectorConfig extends IAfasConfig {
-  type: 'rest' | 'soap';
-}
+/**
+ * Authenticate with either a classic token or OAuth
+ */
+export type IAfasConfig = IAfasBaseConfig &
+  ({ token: string; oauth?: undefined } | { oauth: TAfasOAuthConfig; token?: undefined });
 
-type TOrderByTypes = 'ASC' | 'DESC'
+export type IAfasConnectorConfig = IAfasConfig & {
+  type: 'rest' | 'soap';
+};
+
+type TOrderByTypes = 'ASC' | 'DESC';
 
 export type TOrderBy = {
-  order: TOrderByTypes | OrderBy
-  fieldId: string
-}[]
+  order: TOrderByTypes | OrderBy;
+  fieldId: string;
+}[];
 
 export type TFilterOr = {
-  filtervalue: string,
-  operatortype: TOperatorTypes | OperatorTypes,
-}[]
+  filtervalue: string;
+  operatortype: TOperatorTypes | OperatorTypes;
+}[];
 
 export type TFilter = {
-  filterfieldid: string,
-  filtervalue: string,
-  operatortype: TOperatorTypes | OperatorTypes,
-  or?: TFilterOr,
-}[]
+  filterfieldid: string;
+  filtervalue: string;
+  operatortype: TOperatorTypes | OperatorTypes;
+  or?: TFilterOr;
+}[];
 
-export interface IFilterConfig { 
-  skip?: number, 
-  take?: number, 
-  orderby?: TOrderBy
-  filter?: TFilter,
-  jsonFilter?: Record<string, any>
+export interface IFilterConfig {
+  skip?: number;
+  take?: number;
+  orderby?: TOrderBy;
+  filter?: TFilter;
+  jsonFilter?: Record<string, any>;
 }
 
 export interface ISoapFilterConfig {
-  skip?: number,
-  take?: number,
-  filtersXml?: string
+  skip?: number;
+  take?: number;
+  filtersXml?: string;
 }
 
 export interface IEndpoints {
-  production: string,
-  test: string,
-  accept: string
+  production: string;
+  test: string;
+  accept: string;
 }
 
 export type THttpMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';

@@ -1,10 +1,11 @@
 import { IAfasConfig, TUpdateConnectorName, TAfasRestDataResponse } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 import { ProfitError } from './ProfitError.js';
 
 export default class UpdateConnector extends Connector {
-  constructor(AfasConfig: IAfasConfig) {
-    super({ ...AfasConfig, type: 'rest' });
+  constructor(AfasConfig: IAfasConfig, auth: Authentication) {
+    super({ ...AfasConfig, type: 'rest' }, auth);
   }
 
   /**

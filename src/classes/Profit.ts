@@ -3,42 +3,44 @@ import UpdateConnector from './UpdateConnector.js';
 import DataConnector from './DataConnector.js';
 import SoapConnector from './SoapConnector.js';
 import InsiteConnector from './InsiteConnector.js';
+import Authentication from './Authentication.js';
 
 import { IAfasConfig } from '../models/index.js';
 
 export class Profit {
-  private _AfasConfig: IAfasConfig;
+  private AfasConfig: IAfasConfig;
+  private auth: Authentication;
   public GetConnector: GetConnector;
   public UpdateConnector: UpdateConnector;
   public DataConnector: DataConnector;
   public SoapConnector: SoapConnector;
   public InsiteConnector: InsiteConnector;
 
-  /**
-   * @deprecated Please use DataConnector instead
-   */
-  public CustomConnector: DataConnector;
-
   constructor(AfasConfig: IAfasConfig) {
-    this._AfasConfig = AfasConfig;
-    this.GetConnector = new GetConnector(AfasConfig);
-    this.UpdateConnector = new UpdateConnector(AfasConfig);
-    this.DataConnector = new DataConnector(AfasConfig);
-    this.SoapConnector = new SoapConnector(AfasConfig);
-    this.InsiteConnector = new InsiteConnector(AfasConfig);
-
-    this.CustomConnector = this.DataConnector;
+    this.AfasConfig = AfasConfig;
+    // One Authentication for all connectors, so they reuse the same access token
+    this.auth = new Authentication(AfasConfig);
+    this.GetConnector = new GetConnector(AfasConfig, this.auth);
+    this.UpdateConnector = new UpdateConnector(AfasConfig, this.auth);
+    this.DataConnector = new DataConnector(AfasConfig, this.auth);
+    this.SoapConnector = new SoapConnector(AfasConfig, this.auth);
+    this.InsiteConnector = new InsiteConnector(AfasConfig, this.auth);
   }
 
   public changeConfig(AfasConfig: IAfasConfig) {
-    this._AfasConfig = { ...this._AfasConfig, ...AfasConfig };
-    this.GetConnector = new GetConnector(this._AfasConfig);
-    this.UpdateConnector = new UpdateConnector(this._AfasConfig);
-    this.DataConnector = new DataConnector(this._AfasConfig);
-    this.SoapConnector = new SoapConnector(this._AfasConfig);
-    this.InsiteConnector = new InsiteConnector(this._AfasConfig);
-
-    this.CustomConnector = this.DataConnector;
+    // token and oauth are alternatives, so the new config replaces whichever one was used
+    const { token, oauth: currentOAuth, ...current } = this.AfasConfig;
+    const config: IAfasConfig = { ...current, ...AfasConfig };
+    // Keep the current access token when the new config authenticates the same way.
+    if (!this.auth.matches(config)) {
+      this.auth = new Authentication(config);
+    }
+    this.AfasConfig = config;
+    this.GetConnector = new GetConnector(this.AfasConfig, this.auth);
+    this.UpdateConnector = new UpdateConnector(this.AfasConfig, this.auth);
+    this.DataConnector = new DataConnector(this.AfasConfig, this.auth);
+    this.SoapConnector = new SoapConnector(this.AfasConfig, this.auth);
+    this.InsiteConnector = new InsiteConnector(this.AfasConfig, this.auth);
   }
 
   public async metainfo() {
@@ -50,6 +52,6 @@ export class Profit {
   }
 
   public get config() {
-    return { environment: this._AfasConfig.env, environmentType: this._AfasConfig.envType };
+    return { environment: this.AfasConfig.env, environmentType: this.AfasConfig.envType };
   }
 }

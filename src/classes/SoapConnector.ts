@@ -1,9 +1,11 @@
 import { IAfasConfig, ISoapFilterConfig, TUpdateConnectorName } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
+import { ProfitError } from './ProfitError.js';
 
 export default class SoapConnector extends Connector {
-  constructor(AfasConfig: IAfasConfig) {
-    super({ ...AfasConfig, type: 'soap' });
+  constructor(AfasConfig: IAfasConfig, auth: Authentication) {
+    super({ ...AfasConfig, type: 'soap' }, auth);
   }
 
   /**
@@ -14,15 +16,18 @@ export default class SoapConnector extends Connector {
    * @returns { GetDataResult: string }
    */
   public async get(getConnectorName: string, config?: ISoapFilterConfig): Promise<{ GetDataResult: string }> {
-    const url = `${this.afasUrl}AppConnectorGet.asmx?WSDL`;
-    const args = {
-      connectorId: getConnectorName,
-      skip: 0,
-      take: 100,
-      filtersXml: '',
-      ...config,
-    };
-    return await this.execute(url, args, 'GetData');
+    const url = `${this.afasUrl}AppConnectorGet.asmx`;
+    try {
+      const GetDataResult = await this.execute(url, 'ConnectorAppGet', 'GetData', {
+        connectorId: getConnectorName,
+        filtersXml: config?.filtersXml ?? '',
+        skip: config?.skip ?? 0,
+        take: config?.take ?? 100,
+      });
+      return { GetDataResult };
+    } catch (error: any) {
+      throw new ProfitError('An error occured trying to GET ' + getConnectorName, error);
+    }
   }
 
   /**
@@ -30,15 +35,19 @@ export default class SoapConnector extends Connector {
    * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
    * @param payload {string} A valid AFAS XML string
    *
-   * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
+   * @returns { ExecuteResult: string } for certain UpdateConnectors an XML string containing the new ID, for others an empty string
    */
-  public async update(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any> {
-    const url = `${this.afasUrl}appconnectorupdate.asmx?WSDL`;
-    const args = {
-      connectorType: updateConnectorName,
-      connectorVersion: 1,
-      dataXml: payload,
-    };
-    await this.execute(url, args, 'Execute');
+  public async update(updateConnectorName: TUpdateConnectorName, payload: string): Promise<{ ExecuteResult: string }> {
+    const url = `${this.afasUrl}appconnectorupdate.asmx`;
+    try {
+      const ExecuteResult = await this.execute(url, 'ConnectorAppUpdate', 'Execute', {
+        connectorType: updateConnectorName,
+        connectorVersion: 1,
+        dataXml: payload,
+      });
+      return { ExecuteResult };
+    } catch (error: any) {
+      throw new ProfitError('An error occured trying to update ' + updateConnectorName, error);
+    }
   }
 }
