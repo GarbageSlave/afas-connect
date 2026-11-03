@@ -1,7 +1,8 @@
 import { IAfasConfig, ISoapFilterConfig, TUpdateConnectorName } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 export default class SoapConnector extends Connector {
-    constructor(AfasConfig: IAfasConfig);
+    constructor(AfasConfig: IAfasConfig, auth: Authentication);
     /**
      * Get data from GetConnector
      * @param getConnectorName {string} example: Profit_Article
@@ -17,7 +18,9 @@ export default class SoapConnector extends Connector {
      * @param updateConnectorName {TUpdateConnectorName} UpdateConnector name, example "KnAppointment"
      * @param payload {string} A valid AFAS XML string
      *
-     * @returns for certain UpdateConnectors it returns an ID in either string or object, for others it returns nothing
+     * @returns { ExecuteResult: string } for certain UpdateConnectors an XML string containing the new ID, for others an empty string
      */
-    update(updateConnectorName: TUpdateConnectorName, payload: string): Promise<any>;
+    update(updateConnectorName: TUpdateConnectorName, payload: string): Promise<{
+        ExecuteResult: string;
+    }>;
 }

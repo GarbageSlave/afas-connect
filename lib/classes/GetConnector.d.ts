@@ -1,7 +1,8 @@
 import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 export default class GetConnector extends Connector {
-    constructor(AfasConfig: IAfasConfig);
+    constructor(AfasConfig: IAfasConfig, auth: Authentication);
     private parseConfig;
     /**
      * Get data from GetConnector

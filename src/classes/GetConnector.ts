@@ -1,10 +1,11 @@
 import { IAfasConfig, IFilterConfig, TAfasRestDataResponse } from '../models/index.js';
 import { ProfitError } from './ProfitError.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 
 export default class GetConnector extends Connector {
-  constructor(AfasConfig: IAfasConfig) {
-    super({ ...AfasConfig, type: 'rest' });
+  constructor(AfasConfig: IAfasConfig, auth: Authentication) {
+    super({ ...AfasConfig, type: 'rest' }, auth);
   }
 
   private parseConfig(config: IFilterConfig): string {
@@ -123,7 +124,7 @@ export default class GetConnector extends Connector {
   public async getOne(getConnectorName: string, config?: IFilterConfig): Promise<Record<string, any> | null> {
     try {
       const response = await this.http(
-        this.connectorUrl + getConnectorName + this.parseConfig({ ...config, skip: 0, take: 1 } || {}),
+        this.connectorUrl + getConnectorName + this.parseConfig({ ...config, skip: 0, take: 1 }),
         'GET',
       );
       return response.rows[0] || null;

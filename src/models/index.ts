@@ -203,16 +203,30 @@ type TLanguages =
   | 'de-de' 
   | 'en-en';
 
-export interface IAfasConfig {
+export type TAfasOAuthConfig =
+  | {
+      clientId: string;
+      clientSecret: string;
+    }
+  | {
+      accessToken: string | ((renew: boolean) => string | Promise<string>);
+    };
+
+interface IAfasBaseConfig {
   env: string;
   envType: TAfasConfigEnvType | EnvTypes;
-  token: string;
   language?: TLanguages | Languages;
 }
 
-export interface IAfasConnectorConfig extends IAfasConfig {
+/**
+ * Authenticate with either a classic token or OAuth
+ */
+export type IAfasConfig = IAfasBaseConfig &
+  ({ token: string; oauth?: undefined } | { oauth: TAfasOAuthConfig; token?: undefined });
+
+export type IAfasConnectorConfig = IAfasConfig & {
   type: 'rest' | 'soap';
-}
+};
 
 type TOrderByTypes = 'ASC' | 'DESC'
 

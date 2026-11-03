@@ -1,11 +1,12 @@
 import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models/index.js';
+import Authentication from './Authentication.js';
 export default abstract class Connector {
     private AfasConfig;
-    constructor(AfasConfig: IAfasConnectorConfig);
+    private auth;
+    constructor(AfasConfig: IAfasConnectorConfig, auth: Authentication);
     private get env();
     private get type();
     private get profitservice();
-    private get token();
     private get language();
     protected get afasUrl(): string;
     protected get connectorUrl(): string;
@@ -24,11 +25,13 @@ export default abstract class Connector {
      */
     protected http(url: string, method: THttpMethods, body?: Record<string, any>, customHeaders?: Record<string, any>): Promise<any>;
     /**
+     * SOAP request with AFAS token
      *
-     * @param url {string} WSDL url
-     * @param args {object} arguments
-     * @param methodname {string} client methodname
-     * @returns any
+     * @param url {string} Service url, example: https://12345.soap.afas.online/ProfitServices/AppConnectorGet.asmx
+     * @param service {string} Service name from the WSDL, example: ConnectorAppGet
+     * @param operation {string} Operation name from the WSDL, example: GetData
+     * @param args {object} Arguments in the order the WSDL defines them, a classic token is added as the first argument
+     * @returns {string} Decoded content of the <operation>Result element
      */
-    protected execute(url: string, args: Record<string, any>, methodname: string): Promise<any>;
+    protected execute(url: string, service: string, operation: string, args: Record<string, string | number>): Promise<string>;
 }

@@ -36,26 +36,69 @@ $ yarn add afas-connect
 
 ### Initializing
 
-#### v4.x - ESM Support
-CommonJS is no longer supported in this version.
+#### v5.x - OAuth and Zero dependencies!
+
+Since AFAS is phasing out tokens, the new oauth flow is now supported.
+I can also finally drop node-fetch in favor of the stable fetch api. Which I can also use for SOAP requests. This does mean at least Node 20 is now *required*.
+All in all meaning, zero dependencies! Hooray
+
 
 ```js
-import { Profit, EnvTypes, Languages } from 'afas-connect';
-// or
-import { Profit } from 'afas-connect';
-import { EnvTypes, Languages } from 'afas-connect/models'; 
-
+// Client credentials: the access token is requested, reused until it expires and renewed for you
 const ProfitService = new Profit({
-  token: '<YOUR_TOKEN_HERE>', // <token><version>1</version><data>....</data></token>
-  env: '12345', // Just numbers, no T or something at the start
-  envType: EnvTypes.Production, // or 'production'
-  // Optional
-  language: Languages.Dutch, // or 'nl-nl'
+  oauth: { clientId: '<CLIENT_ID>', clientSecret: '<CLIENT_SECRET>' },
+  env: '12345',
+  envType: EnvTypes.Production,
 });
+
+// Or bring your own access token, for example from a shared cache or a login flow your server handles
+const ProfitService = new Profit({
+  oauth: {
+    // A plain string works too. renew is true when Profit rejected the previous access token, so skip your cache then
+    accessToken: async (renew) => (renew ? await requestNewAccessToken() : await getAccessTokenFromCache()),
+  },
+  env: '12345',
+  envType: EnvTypes.Production,
+});
+
+  // Token authentication will still be supported for now
+  // NOTE: definition of token *and* oauth at the same time is prohibited
+  const ProfitService = new Profit({
+    token: '<YOUR_TOKEN_HERE>', // <token><version>1</version><data>....</data></token>
+    env: '12345', // Just numbers, no T or something at the start
+    envType: EnvTypes.Production, // or 'production'
+    // Optional
+    language: Languages.Dutch, // or 'nl-nl'
+  });
 ```
+
+When Profit rejects the access token (401), it is renewed (or your `accessToken` function is called again with `renew` set to `true`) and the request is retried once. If that fails too, a `ProfitError` with `statusCode` 401 is thrown. A failed token request throws a `ProfitError` with the message `Failed to fetch an OAuth access token: <reason>`, or `Failed to fetch an OAuth access token (HTTP <status>)` when Profit gives no reason. An error thrown by your `accessToken` function is reported the same way, with its message as the reason. When Profit answers any request with only a status code, the message ends in `Profit responded with HTTP <status> and an empty body`.
+
+Profit 9 functionalities will be added once they release.
+
+#### Deprecation
+This release includes a much needed cleanup. With this, I've removed the long deprecated ```CustomConnector```. 
 
 <details>
   <summary>Older versions</summary>
+
+  #### v4.x - ESM Support
+  CommonJS is no longer supported in this version.
+
+  ```js
+  import { Profit, EnvTypes, Languages } from 'afas-connect';
+  // or
+  import { Profit } from 'afas-connect';
+  import { EnvTypes, Languages } from 'afas-connect/models'; 
+
+  const ProfitService = new Profit({
+    token: '<YOUR_TOKEN_HERE>', // <token><version>1</version><data>....</data></token>
+    env: '12345', // Just numbers, no T or something at the start
+    envType: EnvTypes.Production, // or 'production'
+    // Optional
+    language: Languages.Dutch, // or 'nl-nl'
+  });
+  ```
   
   #### v3.x
   ```js
@@ -498,13 +541,16 @@ if (request) {
 
 #### SoapConnector
 
-**SoapConnector.get(getconnectorname)**
+**SoapConnector.get(getconnectorname, config?)**
 
 ```js
 // Get data using SOAP
 const response = await ProfitService.SoapConnector.get('Profit_Article');
 
 // -> expected response { GetDataResult: "<XML DATA STRING />" }
+
+// Optional config, these are the defaults
+const response = await ProfitService.SoapConnector.get('Profit_Article', { skip: 0, take: 100, filtersXml: '' });
 ```
 
 **SoapConnector.update(updateconnectorname, xmlstring)**
@@ -520,7 +566,9 @@ const XMLstring1 = `
     </Element>
 </FbItemArticle>
 `;
-await ProfitService.SoapConnector.update('FbItemArticle', XMLstring1);
+const response = await ProfitService.SoapConnector.update('FbItemArticle', XMLstring1);
+
+// -> expected response { ExecuteResult: "<XML DATA STRING />" }, for UpdateConnectors that don't return anything ExecuteResult is an empty string
 
 // Update a record
 const XMLstring2 = `
@@ -549,7 +597,6 @@ await ProfitService.SoapConnector.update('FbItemArticle', XMLstring3);
 
 ### Planned
 
-- Node fetch to Axios migration
 - DataConnector File upload
 
 If you would like something added/ changed you can send in a PR or dm me on Discord garbageslave#0438, @garbageslave

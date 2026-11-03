@@ -5,5 +5,6 @@ export declare class ProfitError extends Error {
     constructor(description: string, error: {
         body: string;
         response: any;
+        description?: string;
     });
 }

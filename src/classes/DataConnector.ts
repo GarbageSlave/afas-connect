@@ -1,10 +1,11 @@
 import { IAfasConfig, TImageSizes, ImageSizes } from '../models/index.js';
 import Connector from './Connector.js';
+import Authentication from './Authentication.js';
 import { ProfitError } from './ProfitError.js';
 
 export default class DataConnector extends Connector {
-  constructor(AfasConfig: IAfasConfig) {
-    super({ ...AfasConfig, type: 'rest' });
+  constructor(AfasConfig: IAfasConfig, auth: Authentication) {
+    super({ ...AfasConfig, type: 'rest' }, auth);
   }
 
   /**

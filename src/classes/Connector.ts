@@ -1,5 +1,3 @@
-import fetch, { RequestInit } from 'node-fetch';
-import * as soap from 'soap';
 import {
   IAfasConnectorConfig,
   IOtpResponse,
@@ -8,12 +6,16 @@ import {
   THttpMethods,
 } from '../models/index.js';
 import { endpoints } from '../constants/index.js';
+import { escapeXml, unescapeXml } from '../utils/xml.js';
+import Authentication from './Authentication.js';
 
 export default abstract class Connector {
   private AfasConfig: IAfasConnectorConfig;
+  private auth: Authentication;
 
-  constructor(AfasConfig: IAfasConnectorConfig) {
+  constructor(AfasConfig: IAfasConnectorConfig, auth: Authentication) {
     this.AfasConfig = AfasConfig;
+    this.auth = auth;
   }
 
   // Should the env variable contain text, its trimmed and only the numbers are returned
@@ -27,10 +29,6 @@ export default abstract class Connector {
 
   private get profitservice() {
     return this.type === 'rest' ? 'ProfitRestServices' : 'ProfitServices';
-  }
-
-  private get token() {
-    return this.AfasConfig.token;
   }
 
   private get language() {
@@ -127,7 +125,6 @@ export default abstract class Connector {
       const config: RequestInit | any = {
         method,
         headers: {
-          Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
           'Accept-Language': this.language,
         },
       };
@@ -143,7 +140,7 @@ export default abstract class Connector {
       }
 
       try {
-        const response = await fetch(url, config);
+        const response = await this.auth.fetch(url, config);
         const rawBody = await response.text();
         if (response.ok) {
           try {
@@ -155,29 +152,54 @@ export default abstract class Connector {
           reject({ body: rawBody, response });
         }
       } catch (error) {
-        reject(`Failed [${method}]:${url}, ${error}`);
+        reject(error);
       }
     });
   }
 
   /**
+   * SOAP request with AFAS token
    *
-   * @param url {string} WSDL url
-   * @param args {object} arguments
-   * @param methodname {string} client methodname
-   * @returns any
+   * @param url {string} Service url, example: https://12345.soap.afas.online/ProfitServices/AppConnectorGet.asmx
+   * @param service {string} Service name from the WSDL, example: ConnectorAppGet
+   * @param operation {string} Operation name from the WSDL, example: GetData
+   * @param args {object} Arguments in the order the WSDL defines them, a classic token is added as the first argument
+   * @returns {string} Decoded content of the <operation>Result element
    */
-  protected async execute(url: string, args: Record<string, any>, methodname: string): Promise<any> {
-    return await new Promise(async (resolve, reject) => {
-      soap
-        .createClientAsync(url)
-        .then((client) => {
-          client[methodname]({ ...args, token: this.token }, (err: any, result: any) => {
-            if (err) reject(err);
-            resolve(result);
-          });
-        })
-        .catch(reject);
+  protected async execute(
+    url: string,
+    service: string,
+    operation: string,
+    args: Record<string, string | number>,
+  ): Promise<string> {
+    const token = this.auth.envelopeToken;
+    const values: Record<string, string | number> = token === undefined ? { ...args } : { token, ...args };
+    const params = Object.keys(values)
+      .map((key) => `<${key}>${escapeXml(String(values[key]))}</${key}>`)
+      .join('');
+
+    const envelope =
+      '<?xml version="1.0" encoding="utf-8"?>' +
+      '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>' +
+      `<${operation} xmlns="urn:Afas.Profit.Services">${params}</${operation}>` +
+      '</soap:Body></soap:Envelope>';
+
+    const response = await this.auth.fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        SOAPAction: `"urn:Afas.Profit.Services/${service}/${operation}"`,
+      },
+      body: envelope,
     });
+    const rawBody = await response.text();
+
+    if (!response.ok) {
+      throw { body: rawBody, response };
+    }
+
+    // The result holds escaped XML, so it can't contain its own closing tag
+    const result = rawBody.match(new RegExp(`<${operation}Result>([\\s\\S]*?)</${operation}Result>`));
+    return result ? unescapeXml(result[1]) : '';
   }
 }

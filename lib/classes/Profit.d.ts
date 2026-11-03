@@ -5,16 +5,13 @@ import SoapConnector from './SoapConnector.js';
 import InsiteConnector from './InsiteConnector.js';
 import { IAfasConfig } from '../models/index.js';
 export declare class Profit {
-    private _AfasConfig;
+    private AfasConfig;
+    private auth;
     GetConnector: GetConnector;
     UpdateConnector: UpdateConnector;
     DataConnector: DataConnector;
     SoapConnector: SoapConnector;
     InsiteConnector: InsiteConnector;
-    /**
-     * @deprecated Please use DataConnector instead
-     */
-    CustomConnector: DataConnector;
     constructor(AfasConfig: IAfasConfig);
     changeConfig(AfasConfig: IAfasConfig): void;
     metainfo(): Promise<import("../models/index.js").TAfasRestDataResponse>;
